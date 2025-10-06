@@ -1,39 +1,60 @@
+import java.util.Arrays;
+
 class Solution {
-    public int lengthOfLastWord(String s) {
-        String trimmedString = s.trim();
+    public int[] plusOne(int[] digits) {
+        int n = digits.length;
 
+        for (int i = n - 1; i >= 0; i--) {
 
-        int lastSpaceIndex = trimmedString.lastIndexOf(' ');
+            if (digits[i] < 9) {
+                digits[i]++;
+                return digits;
+            }
 
+            digits[i] = 0;
+        }
 
-        return trimmedString.length() - (lastSpaceIndex + 1);
+        int[] newDigits = new int[n + 1];
+
+        newDigits[0] = 1;
+
+        return newDigits;
     }
 }
 
 class Main {
+
+    public static void printArray(int[] arr) {
+        System.out.print(Arrays.toString(arr));
+    }
+
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        System.out.println("--- Testes de Comprimento da Última Palavra ---");
+        System.out.println("--- Testes Plus One ---");
 
-        String s1 = "Hello World";
-        int result1 = solution.lengthOfLastWord(s1);
-        System.out.println("Input: \"" + s1 + "\"");
-        System.out.println("Output: " + result1 + " \n");
+        int[] input1 = {1, 2, 3};
+        int[] result1 = solution.plusOne(input1);
+        System.out.print("Input: [1, 2, 3] -> Output: ");
+        printArray(result1);
+        System.out.println();
 
-        String s2 = "   fly me   to   the moon  ";
-        int result2 = solution.lengthOfLastWord(s2);
-        System.out.println("Input: \"" + s2 + "\"");
-        System.out.println("Output: " + result2 + " \n");
+        int[] input2 = {4, 3, 2, 9};
+        int[] result2 = solution.plusOne(input2);
+        System.out.print("Input: [4, 3, 2, 9] -> Output: ");
+        printArray(result2);
+        System.out.println();
 
-        String s3 = "luffy is still joyboy";
-        int result3 = solution.lengthOfLastWord(s3);
-        System.out.println("Input: \"" + s3 + "\"");
-        System.out.println("Output: " + result3 + " \n");
+        int[] input3 = {9};
+        int[] result3 = solution.plusOne(input3);
+        System.out.print("Input: [9] -> Output: ");
+        printArray(result3);
+        System.out.println();
 
-        String s4 = "   única   ";
-        int result4 = solution.lengthOfLastWord(s4);
-        System.out.println("Input: \"" + s4 + "\"");
-        System.out.println("Output: " + result4 + "\n");
+        int[] input4 = {9, 9, 9};
+        int[] result4 = solution.plusOne(input4);
+        System.out.print("Input: [9, 9, 9] -> Output: ");
+        printArray(result4);
+        System.out.println();
     }
 }
