@@ -1,6 +1,21 @@
 class Solution {
-    public int strStr(String kaystack, String needle) {
-        return kaystack.indexOf(needle);
+    public int searchInsert(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+
+        while(left <= right) {
+            int mid = left + (right - left) / 2;
+
+            if (nums[mid] == target) {
+                return mid;
+            } else if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return left;
     }
 }
 
@@ -8,29 +23,28 @@ class Main {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        // Exemplo 1: Ocorrência encontrada no início
-        String haystack1 = "sadbutsad";
-        String needle1 = "sad";
-        int index1 = solution.strStr(haystack1, needle1);
-        System.out.println("Input: haystack = \"" + haystack1 + "\", needle = \"" + needle1 + "\"");
-        System.out.println("Output: " + index1); // Esperado: 0
+        int[] nums = {1, 3, 5, 6};
 
-        System.out.println("---");
+        System.out.println("--- Testes de Busca Binária (searchInsert) ---");
 
-        // Exemplo 2: Ocorrência não encontrada
-        String haystack2 = "leetcode";
-        String needle2 = "leeto";
-        int index2 = solution.strStr(haystack2, needle2);
-        System.out.println("Input: haystack = \"" + haystack2 + "\", needle = \"" + needle2 + "\"");
-        System.out.println("Output: " + index2); // Esperado: -1
+        int target1 = 5;
+        int result1 = solution.searchInsert(nums, target1);
+        System.out.println("Array: [1, 3, 5, 6], Target: " + target1);
+        System.out.println("Resultado: " + result1);
 
-        System.out.println("---");
+        int target2 = 2;
+        int result2 = solution.searchInsert(nums, target2);
+        System.out.println("Array: [1, 3, 5, 6], Target: " + target2);
+        System.out.println("Resultado: " + result2 );
 
-        // Exemplo 3: Ocorrência no meio
-        String haystack3 = "mississippi";
-        String needle3 = "issip";
-        int index3 = solution.strStr(haystack3, needle3);
-        System.out.println("Input: haystack = \"" + haystack3 + "\", needle = \"" + needle3 + "\"");
-        System.out.println("Output: " + index3); // Esperado: 4
+        int target3 = 7;
+        int result3 = solution.searchInsert(nums, target3);
+        System.out.println("Array: [1, 3, 5, 6], Target: " + target3);
+        System.out.println("Resultado: " + result3);
+
+        int target4 = 0;
+        int result4 = solution.searchInsert(nums, target4);
+        System.out.println("Array: [1, 3, 5, 6], Target: " + target4);
+        System.out.println("Resultado: " + result4);
     }
 }
