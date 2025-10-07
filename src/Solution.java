@@ -1,48 +1,61 @@
-public class Solution {
-    public int climbStairs(int n) {
-        if (n <= 0) {
-            return 0;
+
+class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode() {}
+    ListNode(int val) { this.val = val; }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+
+    @Override
+    public String toString() {
+        if (next == null) return String.valueOf(val);
+        return val + " -> " + next.toString();
+    }
+}
+
+class Solution {
+    public ListNode deleteDuplicates(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
         }
 
-        if (n == 1) {
-            return 1;
-        }
-        if (n == 2) {
-            return 2;
-        }
+        ListNode current = head;
 
-        int anterior_2 = 1;
-        int anterior_1 = 2;
-        int atual = 0;
+        while (current != null && current.next != null) {
 
-        for (int i = 3; i <= n; i++) {
-            atual = anterior_1 + anterior_2;
-
-            anterior_2 = anterior_1;
-            anterior_1 = atual;
+            if (current.val == current.next.val) {
+                current.next = current.next.next;
+            } else {
+                current = current.next;
+            }
         }
 
-        return atual;
+        return head;
     }
 
 
     public static void main(String[] args) {
         Solution solver = new Solution();
 
-        int n1 = 2;
-        int resultado1 = solver.climbStairs(n1);
-        System.out.println("Para n = " + n1 + " degraus: " + resultado1 + " maneiras.");
+        ListNode head1 = new ListNode(1, new ListNode(1, new ListNode(2)));
+        System.out.println("Lista Original 1: " + head1);
+        ListNode resultado1 = solver.deleteDuplicates(head1);
+        System.out.println("Resultado 1: " + resultado1);
 
-        int n2 = 3;
-        int resultado2 = solver.climbStairs(n2);
-        System.out.println("Para n = " + n2 + " degraus: " + resultado2 + " maneiras.");
+        System.out.println("---");
 
-        int n3 = 5;
-        int resultado3 = solver.climbStairs(n3);
-        System.out.println("Para n = " + n3 + " degraus: " + resultado3 + " maneiras.");
 
-        int n4 = 10;
-        int resultado4 = solver.climbStairs(n4);
-        System.out.println("Para n = " + n4 + " degraus: " + resultado4 + " maneiras.");
+        ListNode head2 = new ListNode(1, new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(3)))));
+        System.out.println("Lista Original 2: " + head2);
+        ListNode resultado2 = solver.deleteDuplicates(head2);
+        System.out.println("Resultado 2: " + resultado2);
+
+        System.out.println("---");
+
+        ListNode head3 = new ListNode(1, new ListNode(1, new ListNode(1, new ListNode(1))));
+        System.out.println("Lista Original 3: " + head3);
+        ListNode resultado3 = solver.deleteDuplicates(head3);
+        System.out.println("Resultado 3: " + resultado3);
     }
 }
