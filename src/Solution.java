@@ -1,59 +1,59 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+
+class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int val) {
+        this.val = val;
+    }
+}
 
 class Solution {
-    public void merge(int[] nums1, int m, int[] nums2, int n) {
+    public List<Integer> inorderTraversal(TreeNode root) {
+        List<Integer> resultado = new ArrayList<>();
+        ajudanteInorder(root, resultado);
+        return resultado;
+    }
 
-        int p1 = m - 1;
-        int p2 = n - 1;
-        int pMerge = m + n - 1;
-
-        while (p2 >= 0) {
-
-            if (p1 >= 0 && nums1[p1] > nums2[p2]) {
-                nums1[pMerge] = nums1[p1];
-                p1--;
-            } else {
-                nums1[pMerge] = nums2[p2];
-                p2--;
-            }
-
-            pMerge--;
+    private void ajudanteInorder(TreeNode no, List<Integer> resultado) {
+        if (no == null) {
+            return;
         }
+
+        ajudanteInorder(no.left, resultado);
+
+        resultado.add(no.val);
+
+        ajudanteInorder(no.right, resultado);
     }
 
     public static void main(String[] args) {
         Solution solver = new Solution();
 
-        int[] nums1_1 = {1, 2, 3, 0, 0, 0};
-        int m1 = 3;
-        int[] nums2_1 = {2, 5, 6};
-        int n1 = 3;
+        TreeNode root1 = new TreeNode(1);
+        root1.right = new TreeNode(2);
+        root1.right.left = new TreeNode(3);
 
-        solver.merge(nums1_1, m1, nums2_1, n1);
-        System.out.println(Arrays.toString(nums1_1));
+        List<Integer> resultado1 = solver.inorderTraversal(root1);
+        System.out.println(resultado1);
 
-        int[] nums1_2 = {1};
-        int m2 = 1;
-        int[] nums2_2 = {};
-        int n2 = 0;
+        System.out.println("-------------------------");
 
-        solver.merge(nums1_2, m2, nums2_2, n2);
-        System.out.println(Arrays.toString(nums1_2));
 
-        int[] nums1_3 = {0};
-        int m3 = 0;
-        int[] nums2_3 = {1};
-        int n3 = 1;
+        TreeNode root2 = new TreeNode(1);
+        root2.left = new TreeNode(2);
+        root2.right = new TreeNode(3);
+        root2.left.left = new TreeNode(4);
+        root2.left.right = new TreeNode(5);
+        root2.right.right = new TreeNode(8);
+        root2.left.right.left = new TreeNode(6);
+        root2.left.right.right = new TreeNode(7);
+        root2.right.right.left = new TreeNode(9);
 
-        solver.merge(nums1_3, m3, nums2_3, n3);
-        System.out.println(Arrays.toString(nums1_3));
-
-        int[] nums1_4 = {4, 5, 6, 0, 0, 0};
-        int m4 = 3;
-        int[] nums2_4 = {1, 2, 3};
-        int n4 = 3;
-
-        solver.merge(nums1_4, m4, nums2_4, n4);
-        System.out.println(Arrays.toString(nums1_4));
+        List<Integer> resultado2 = solver.inorderTraversal(root2);
+        System.out.println(resultado2);
     }
 }
