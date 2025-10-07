@@ -1,59 +1,45 @@
-import java.util.ArrayList;
-import java.util.List;
 
 class TreeNode {
     int val;
     TreeNode left;
     TreeNode right;
 
-    TreeNode(int val) {
-        this.val = val;
-    }
-}
-
-class Solution {
-    public List<Integer> inorderTraversal(TreeNode root) {
-        List<Integer> resultado = new ArrayList<>();
-        ajudanteInorder(root, resultado);
-        return resultado;
+        TreeNode(){}
+        TreeNode(int val) {this.val = val; }
+        TreeNode (int val, TreeNode left, TreeNode right) {
+            this.val = val;
+            this.left = left;
+            this.right = right;
+        }
     }
 
-    private void ajudanteInorder(TreeNode no, List<Integer> resultado) {
-        if (no == null) {
-            return;
+public class Solution {
+
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
+            return true;
         }
 
-        ajudanteInorder(no.left, resultado);
+        if (p == null || q == null || p.val != q.val) {
+            return false;
+        }
 
-        resultado.add(no.val);
-
-        ajudanteInorder(no.right, resultado);
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
 
     public static void main(String[] args) {
-        Solution solver = new Solution();
+        Solution solution = new Solution();
 
-        TreeNode root1 = new TreeNode(1);
-        root1.right = new TreeNode(2);
-        root1.right.left = new TreeNode(3);
+        TreeNode p1 = new TreeNode(1, new TreeNode(2), new TreeNode(3));
+        TreeNode q1 = new TreeNode(1, new TreeNode(2), new TreeNode(3));
+        System.out.println(solution.isSameTree(p1, q1));
 
-        List<Integer> resultado1 = solver.inorderTraversal(root1);
-        System.out.println(resultado1);
+        TreeNode p2 = new TreeNode(1, new TreeNode(2), null);
+        TreeNode q2 = new TreeNode(1, null, new TreeNode(2));
+        System.out.println(solution.isSameTree(p2, q2));
 
-        System.out.println("-------------------------");
-
-
-        TreeNode root2 = new TreeNode(1);
-        root2.left = new TreeNode(2);
-        root2.right = new TreeNode(3);
-        root2.left.left = new TreeNode(4);
-        root2.left.right = new TreeNode(5);
-        root2.right.right = new TreeNode(8);
-        root2.left.right.left = new TreeNode(6);
-        root2.left.right.right = new TreeNode(7);
-        root2.right.right.left = new TreeNode(9);
-
-        List<Integer> resultado2 = solver.inorderTraversal(root2);
-        System.out.println(resultado2);
+        TreeNode p3 = new TreeNode(1, new TreeNode(2), new TreeNode(1));
+        TreeNode q3 = new TreeNode(1, new TreeNode(1), new TreeNode(2));
+        System.out.println(solution.isSameTree(p3, q3));
     }
 }
