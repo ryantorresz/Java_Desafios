@@ -1,49 +1,68 @@
-import java.util.Scanner;
 import java.util.Arrays;
+import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Solution {
+
+    public static int [] rotateLeft(int[] arr, int d) {
+        int n = arr.length;
+
+        d = d % n;
+
+        int[] rotatedArr = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            int originalIndex = (i + d) % n;
+            rotatedArr[i] = arr[originalIndex];
+        }
+
+        return rotatedArr;
+    }
+
+
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Mensagem de instrução para o usuário
-        System.out.println("------------------------------------------");
-        System.out.println("  INVERSÃO DE ARRAY: Digite a entrada.");
-        System.out.print("1. Digite o TAMANHO do array (ex: 4): ");
+        System.out.println("==========================================");
+        System.out.println("  ROTAÇÃO DE ARRAY CIRCULAR PARA A ESQUERDA");
+        System.out.println("==========================================");
+
+        // Solicita n (tamanho do array)
+        System.out.print("Digite o tamanho do array (n): ");
         int n = scanner.nextInt();
 
-        scanner.nextLine(); // Consome a quebra de linha
+        // Solicita d (número de rotações)
+        System.out.print("Digite o número de rotações para a esquerda (d): ");
+        int d = scanner.nextInt();
 
-        System.out.print("2. Digite os " + n + " elementos (separados por espaço, ex: 1 4 3 2): ");
+        // Consome a quebra de linha pendente
+        scanner.nextLine();
+
+        // Solicita os elementos do array
+        System.out.print("Digite os " + n + " elementos do array (separados por espaço): ");
+
+        // Lê a linha inteira de elementos
         String inputLine = scanner.nextLine();
 
         scanner.close();
 
-        // Converte a string de entrada para um array de inteiros
-        int[] arr = Arrays.stream(inputLine.split(" "))
+
+        int [] arr = Arrays.stream(inputLine.split(" "))
                 .mapToInt(Integer::parseInt)
                 .toArray();
 
-        // ----------------------------------------------------
-        // 4. Imprime o array na ordem inversa
-        // ----------------------------------------------------
-        StringBuilder reversedOutput = new StringBuilder();
+        int [] result = rotateLeft(arr, d);
 
-        for (int i = n - 1; i >= 0; i--) {
-            reversedOutput.append(arr[i]);
+        String output = Arrays.stream(result)
+                .mapToObj(String::valueOf)
+                .collect(Collectors.joining(" "));
 
-            if (i > 0) {
-                reversedOutput.append(" ");
-            }
-        }
 
+        // --- Mensagens de Saída ---
         System.out.println("\n------------------------------------------");
-        System.out.print("Array Invertido: ");
-        // Imprime a saída que o desafio espera
-        System.out.println(reversedOutput.toString());
-
-        // Mensagem de que deu certo!
-        System.out.println("Operação concluída com sucesso! ✅");
+        System.out.println("Array Rotacionado (" + d + " vezes):");
+        System.out.println(output);
         System.out.println("------------------------------------------");
     }
-}
+   }
