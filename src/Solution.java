@@ -1,93 +1,78 @@
-import java.util.*;
+import java.util.Scanner;
 
-class Person {
-    protected String firstName;
-    protected String lastName;
-    protected int idNumber;
-
-    Person(String firstName, String lastName, int idNumber) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.idNumber = idNumber;
-    }
-
-    public void printPerson() {
-        System.out.println("Name: " + lastName + ", " + firstName + "\nID: " + idNumber);
+class Exception extends java.lang.Exception {
+    public Exception(String message) {
+        super(message);
     }
 }
 
-class Student extends Person {
+class MyCalculator {
+    long power(int n, int p) throws Exception {
 
-    private int[] testScores;
+        if (n == 0 && p == 0) {
+            throw new Exception("n and p should not be a zero.");
 
-    Student(String firstName, String lastName, int id, int[] scores) {
-        super(firstName, lastName, id);
-
-        this.testScores = scores;
-    }
-
-
-    public char calculate() {
-        int sum = 0;
-
-        for (int score : testScores) {
-            sum += score;
+        }
+        if (n < 0 || p< 0) {
+            throw new Exception("n or p should not be negative.");
         }
 
-        if (testScores.length == 0) {
-            return 'U';
-        }
 
-        int average = sum / testScores.length;
-
-        if (average >= 90 && average <= 100) {
-            return 'O';
-        } else if (average >= 80 && average < 90) {
-            return 'E';
-        } else if (average >= 70 && average < 80) {
-            return 'A';
-        } else if (average >= 55 && average < 70) {
-            return 'P';
-        } else if (average >= 40 && average < 55) {
-            return 'D';
-        } else {
-            return 'T';
-        }
+        return (long) Math.pow(n,p);
     }
 }
+
 
 public class Solution {
+    public static final MyCalculator my_calculator = new MyCalculator();
+    public static final Scanner in = new Scanner(System.in);
+
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
 
+        // Novo e aprimorado cabeçalho
+        System.out.println("\n==============================================");
+        System.out.println("         Calculadora de Potência (n^p)        ");
+        System.out.println("==============================================");
+        System.out.println("Instruções: Digite 'n' e 'p' para calcular n^p.");
+        System.out.println("Para encerrar o programa, insira um caractere não-numérico.\n");
+        // O '\n' final garante uma linha em branco antes da primeira solicitação de entrada.
 
-        System.out.print("Digite o Primeiro Nome: ");
-        String firstName = scan.next();
+        // Usamos um contador para rastrear a ordem das entradas
+        int contador = 1;
 
-        System.out.print("Digite o Sobrenome: ");
-        String lastName = scan.next();
+        // O loop continua enquanto houver números inteiros na entrada para 'n' e 'p'
+        while (in.hasNextInt()) {
 
-        System.out.print("Digite o ID do Aluno: ");
-        int id = scan.nextInt();
+            // Adiciona uma linha de separação para cada nova entrada
+            System.out.println("\n----------------- ENTRADA #" + contador + " -----------------");
 
-        System.out.print("Digite o Número de Notas (ex: 3): ");
-        int numScores = scan.nextInt();
+            // Solicita e lê o valor de n (base)
+            System.out.print("Digite o valor de 'n' (base): ");
+            int n = in.nextInt();
 
-        System.out.println("Digite as " + numScores + " Notas (separadas por espaço):");
+            // Solicita e lê o valor de p (expoente)
+            System.out.print("Digite o valor de 'p' (expoente): ");
+            int p = in.nextInt();
 
-        int[] testScores = new int[numScores];
-        for (int i = 0; i < numScores; i++) {
-            testScores[i] = scan.nextInt();
+            System.out.println("----------------------------------------");
+
+            try {
+                // Imprime o resultado formatado
+                System.out.println("RESULTADO (" + n + "^" + p + "): " + my_calculator.power(n, p));
+            } catch (Exception e) {
+                // Imprime o erro formatado
+                System.out.println("ERRO: " + e.getClass().getName() + ": " + e.getMessage());
+            }
+
+            // Linha em branco para separar a saída do resultado da próxima entrada
+            System.out.println("\n");
+
+            contador++;
         }
 
-        // --- FIM DA ENTRADA ---
-        scan.close();
-
-        Student s = new Student(firstName, lastName, id, testScores);
-
-        System.out.println("\n--- RESULTADO ---");
-        s.printPerson();
-        System.out.println("Grade: " + s.calculate());
-        System.out.println("-----------------");
+        // Mensagem de encerramento
+        System.out.println("\n==============================================");
+        System.out.println("Programa encerrado. Obrigado!");
+        System.out.println("==============================================\n");
     }
 }
