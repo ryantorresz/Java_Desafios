@@ -1,68 +1,89 @@
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.stream.Collectors;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 public class Solution {
 
-    public static int [] rotateLeft(int[] arr, int d) {
-        int n = arr.length;
+    public static int hourglassSum(List<List<Integer>> arr) {
 
-        d = d % n;
+        int maxSum = Integer.MIN_VALUE;
 
-        int[] rotatedArr = new int[n];
+        int rows = arr.size();
+        int cols = arr.get(0).size();
 
-        for (int i = 0; i < n; i++) {
-            int originalIndex = (i + d) % n;
-            rotatedArr[i] = arr[originalIndex];
+        for(int i = 0; i <= rows - 3; i++) {
+            for(int j = 0; j <= cols - 3; j++) {
+
+                int currentSum = 0;
+
+                currentSum += arr.get(i).get(j);
+                currentSum += arr.get(i).get(j + 1);
+                currentSum += arr.get(i).get(j + 2);
+
+                currentSum += arr.get(i + 1).get(j + 1);
+
+                currentSum += arr.get(i + 2).get(j);
+                currentSum += arr.get(i + 2).get(j + 1);
+                currentSum += arr.get(i + 2).get(j + 2);
+
+                if (currentSum > maxSum) {
+                    maxSum = currentSum;
+                }
+            }
         }
 
-        return rotatedArr;
+        return maxSum;
+
     }
+    public static void main(String[] args) throws IOException {
+
+        // --- INSTRUÇÕES DE INTERAÇÃO ---
+        System.out.println("=============================================");
+        System.out.println("  CÁLCULO DA SOMA MÁXIMA DA AMPULHETA (6x6)  ");
+        System.out.println("=============================================");
+        System.out.println("INSTRUÇÃO: Digite os 6x6 números do array.");
+        System.out.println("Cada linha deve conter 6 números separados por espaço (Enter a cada linha):");
+        System.out.println("---------------------------------------------");
 
 
+        var bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        // Leitura do array 6x6
+        List<List<Integer>> arr = new ArrayList<>();
 
-        System.out.println("==========================================");
-        System.out.println("  ROTAÇÃO DE ARRAY CIRCULAR PARA A ESQUERDA");
-        System.out.println("==========================================");
+        IntStream.range(0, 6).forEach(i -> {
+            // Mensagem de guia para a linha atual
+            System.out.print("Linha " + (i + 1) + "/6: ");
 
-        // Solicita n (tamanho do array)
-        System.out.print("Digite o tamanho do array (n): ");
-        int n = scanner.nextInt();
+            try {
+                // A lógica de leitura é complexa, mas agora está guiada pela mensagem acima
+                arr.add(
+                        Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+                                .map(Integer::parseInt)
+                                .collect(toList())
+                );
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
-        // Solicita d (número de rotações)
-        System.out.print("Digite o número de rotações para a esquerda (d): ");
-        int d = scanner.nextInt();
+        // Calcula o resultado
+        int result = hourglassSum(arr);
 
-        // Consome a quebra de linha pendente
-        scanner.nextLine();
+        // --- EXIBIÇÃO DO RESULTADO ---
+        System.out.println("---------------------------------------------");
+        System.out.print("A Soma Máxima da Ampulheta é: ");
+        System.out.println(result);
+        System.out.println("Operação concluída com sucesso! ✅");
+        System.out.println("=============================================");
 
-        // Solicita os elementos do array
-        System.out.print("Digite os " + n + " elementos do array (separados por espaço): ");
-
-        // Lê a linha inteira de elementos
-        String inputLine = scanner.nextLine();
-
-        scanner.close();
-
-
-        int [] arr = Arrays.stream(inputLine.split(" "))
-                .mapToInt(Integer::parseInt)
-                .toArray();
-
-        int [] result = rotateLeft(arr, d);
-
-        String output = Arrays.stream(result)
-                .mapToObj(String::valueOf)
-                .collect(Collectors.joining(" "));
-
-
-        // --- Mensagens de Saída ---
-        System.out.println("\n------------------------------------------");
-        System.out.println("Array Rotacionado (" + d + " vezes):");
-        System.out.println(output);
-        System.out.println("------------------------------------------");
+        bufferedReader.close();
     }
-   }
+}
+
