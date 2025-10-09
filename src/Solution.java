@@ -1,78 +1,49 @@
 import java.util.Scanner;
-
-class Exception extends java.lang.Exception {
-    public Exception(String message) {
-        super(message);
-    }
-}
-
-class MyCalculator {
-    long power(int n, int p) throws Exception {
-
-        if (n == 0 && p == 0) {
-            throw new Exception("n and p should not be a zero.");
-
-        }
-        if (n < 0 || p< 0) {
-            throw new Exception("n or p should not be negative.");
-        }
-
-
-        return (long) Math.pow(n,p);
-    }
-}
-
+import java.util.Arrays;
 
 public class Solution {
-    public static final MyCalculator my_calculator = new MyCalculator();
-    public static final Scanner in = new Scanner(System.in);
 
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
 
-        // Novo e aprimorado cabeçalho
-        System.out.println("\n==============================================");
-        System.out.println("         Calculadora de Potência (n^p)        ");
-        System.out.println("==============================================");
-        System.out.println("Instruções: Digite 'n' e 'p' para calcular n^p.");
-        System.out.println("Para encerrar o programa, insira um caractere não-numérico.\n");
-        // O '\n' final garante uma linha em branco antes da primeira solicitação de entrada.
+        // Mensagem de instrução para o usuário
+        System.out.println("------------------------------------------");
+        System.out.println("  INVERSÃO DE ARRAY: Digite a entrada.");
+        System.out.print("1. Digite o TAMANHO do array (ex: 4): ");
+        int n = scanner.nextInt();
 
-        // Usamos um contador para rastrear a ordem das entradas
-        int contador = 1;
+        scanner.nextLine(); // Consome a quebra de linha
 
-        // O loop continua enquanto houver números inteiros na entrada para 'n' e 'p'
-        while (in.hasNextInt()) {
+        System.out.print("2. Digite os " + n + " elementos (separados por espaço, ex: 1 4 3 2): ");
+        String inputLine = scanner.nextLine();
 
-            // Adiciona uma linha de separação para cada nova entrada
-            System.out.println("\n----------------- ENTRADA #" + contador + " -----------------");
+        scanner.close();
 
-            // Solicita e lê o valor de n (base)
-            System.out.print("Digite o valor de 'n' (base): ");
-            int n = in.nextInt();
+        // Converte a string de entrada para um array de inteiros
+        int[] arr = Arrays.stream(inputLine.split(" "))
+                .mapToInt(Integer::parseInt)
+                .toArray();
 
-            // Solicita e lê o valor de p (expoente)
-            System.out.print("Digite o valor de 'p' (expoente): ");
-            int p = in.nextInt();
+        // ----------------------------------------------------
+        // 4. Imprime o array na ordem inversa
+        // ----------------------------------------------------
+        StringBuilder reversedOutput = new StringBuilder();
 
-            System.out.println("----------------------------------------");
+        for (int i = n - 1; i >= 0; i--) {
+            reversedOutput.append(arr[i]);
 
-            try {
-                // Imprime o resultado formatado
-                System.out.println("RESULTADO (" + n + "^" + p + "): " + my_calculator.power(n, p));
-            } catch (Exception e) {
-                // Imprime o erro formatado
-                System.out.println("ERRO: " + e.getClass().getName() + ": " + e.getMessage());
+            if (i > 0) {
+                reversedOutput.append(" ");
             }
-
-            // Linha em branco para separar a saída do resultado da próxima entrada
-            System.out.println("\n");
-
-            contador++;
         }
 
-        // Mensagem de encerramento
-        System.out.println("\n==============================================");
-        System.out.println("Programa encerrado. Obrigado!");
-        System.out.println("==============================================\n");
+        System.out.println("\n------------------------------------------");
+        System.out.print("Array Invertido: ");
+        // Imprime a saída que o desafio espera
+        System.out.println(reversedOutput.toString());
+
+        // Mensagem de que deu certo!
+        System.out.println("Operação concluída com sucesso! ✅");
+        System.out.println("------------------------------------------");
     }
 }
