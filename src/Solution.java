@@ -1,55 +1,46 @@
-import java.util.*;
+import java.util.Scanner;
 
-abstract class Book {
-    String title;
-    String author;
+interface AdvancedArithmetic {
 
-    Book(String title, String author) {
-        this.title = title;
-        this.author = author;
-    }
+    int divisorSum(int n);
 
-    abstract void display();
 }
 
-class MyBook extends Book {
-
-    int price;
-
-
-
-    MyBook(String title, String author, int price) {
-        super(title, author);
-        this.price = price;
-    }
+class Calculator implements AdvancedArithmetic {
 
     @Override
-    void display() {
-        System.out.println("Title: " + title);
-        System.out.println("Author: " + author);
-        System.out.println("Price: " + price);
+    public int divisorSum(int n) {
+        int sum = 0;
+
+
+        for (int i = 1; i * i <= n; i++) {
+            if (n % i == 0) {
+                sum+= i;
+            } if (i * i != n) {
+                sum += (n / i);
+            }
+        }
+        return sum;
     }
 }
 
 public class Solution {
     public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
 
-        System.out.println("--- Digite o Sample Input Abaixo ---");
-        System.out.println("The Alchemist (e pressione ENTER)");
-        System.out.println("Paulo Coelho (e pressione ENTER)");
-        System.out.println("248 (e pressione ENTER)");
-        System.out.println("------------------------------------");
+        System.out.println("Enter an integer n (e.g., 6):");
+        int n = scan.nextInt();
+        scan.close();
 
-        Scanner scanner = new Scanner(System.in);
+        AdvancedArithmetic myCalculator = new Calculator();
 
-        String title = scanner.nextLine();
-        String author = scanner.nextLine();
-        int price = scanner.nextInt();
+        int sum = myCalculator.divisorSum(n);
 
-        Book newBook = new MyBook(title, author, price);
-
-        newBook.display();
-
-        scanner.close();
+        System.out.println("I implemented: AdvancedArithmetic");
+        System.out.println(sum);
     }
 }
+
+
+
+
