@@ -1,42 +1,54 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 public class Solution {
 
-    public static int simpleArraySum(List<Integer> ar) {
-        int sum = 0;
-        for (int element : ar) {
-            sum += element;
+    // (Coloque sua função compareTriplets aqui, se quiser testar)
+    public static List<Integer> compareTriplets(List<Integer> a, List<Integer> b) {
+        int aliceScore = 0;
+        int bobScore = 0;
+        for (int i = 0; i < 3; i++) {
+            if (a.get(i) > b.get(i)) {
+                aliceScore++;
+            } else if (a.get(i) < b.get(i)) {
+                bobScore++;
+            }
         }
-        return sum;
+        return Arrays.asList(aliceScore, bobScore);
     }
 
+    // --- Bloco Principal de Leitura (SOUT para Inserção) ---
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Digite o tamanho do array (n): ");
-        int n = scanner.nextInt();
+        // 1. SOUT para as Pontuações de Alice
+        System.out.println("Insira as 3 pontuações de Alice (separadas por espaço, ex: 5 6 7):");
 
-        scanner.nextLine();
+        // 2. Leitura e Processamento dos dados de Alice
+        String linhaAlice = scanner.nextLine();
+        List<Integer> a = Arrays.stream(linhaAlice.split(" "))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
 
-        System.out.println("Digite os " + n + " elementos do array, separados por espaço:");
+        // 3. SOUT para as Pontuações de Bob
+        System.out.println("Insira as 3 pontuações de Bob (separadas por espaço, ex: 3 6 10):");
 
-        String linhaElementos = scanner.nextLine();
-
-        List<Integer> ar = new ArrayList<>();
-        String[] elementos = linhaElementos.split(" ");
-        for (String elemento : elementos) {
-            try {
-                ar.add(Integer.parseInt(elemento));
-            } catch (NumberFormatException e) {
-                System.out.println("Aviso: O valor '" + elemento + "' não é um número válido e foi ignorado.");
-            }
-        }
-
-        int resultado = simpleArraySum(ar);
-        System.out.println("\nA soma total dos elementos é: " + resultado);
+        // 4. Leitura e Processamento dos dados de Bob
+        String linhaBob = scanner.nextLine();
+        List<Integer> b = Arrays.stream(linhaBob.split(" "))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
 
         scanner.close();
+
+        // 5. Chamada da Função e Resultado Final (Sout)
+        List<Integer> resultado = compareTriplets(a, b);
+
+        System.out.println("\n--- Resultado da Comparação ---");
+        System.out.println("Pontuação de Alice: " + resultado.get(0));
+        System.out.println("Pontuação de Bob: " + resultado.get(1));
+        System.out.println("Resultado final (Alice, Bob): " + resultado);
     }
 }
