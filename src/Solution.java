@@ -1,41 +1,62 @@
+import java.util.HashSet;
 import java.util.Scanner;
-
-class Result {
-    public static void staircase(int n) {
-
-        for (int i = 1; i <= n; i++) {
-            int numEspacos = n - 1;
-
-            StringBuilder linha = new StringBuilder();
-
-            for (int j = 0; j < numEspacos; j++) {
-                linha.append(" ");
-            }
-            for (int k = 0; k < i; k++) {
-                linha.append("#");
-            }
-
-            System.out.println(linha.toString());
-        }
-    }
-}
-
+import java.util.Set;
 
 public class Solution {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Digite o tamanho (N) da escada:");
 
-        int n = 0;
-        if (scanner.hasNextInt()) {
-            n = scanner.nextInt();
+    public boolean containsDuplicate(int[] nums) {
 
-            Result.staircase(n);
-        } else {
-            System.out.println("Erro: Entrada invalida. Por favor, digite um numero inteiro.");
+        Set<Integer> seen = new HashSet<>();
+
+        for (int num : nums) {
+            if (seen.contains(num)) {
+                return true;
+            }
+            seen.add(num);
         }
 
+        return false;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Solution solution = new Solution();
+
+        System.out.println("--- Verificador de Duplicatas ---");
+        System.out.println("Digite a sequencia de numeros inteiros, separados por espaco:");
+        System.out.println("Exemplo: 1 2 3 1");
+
+        String inputLine = scanner.nextLine();
         scanner.close();
+
+        if (inputLine.trim().isEmpty()) {
+            System.out.println("Nenhum numero inserido.");
+            return;
+        }
+
+        try {
+            String[] numStrings = inputLine.trim().split("\\s+");
+
+            int[] nums = new int[numStrings.length];
+
+            for (int i = 0; i < numStrings.length; i++) {
+                nums[i] = Integer.parseInt(numStrings[i]);
+            }
+
+            boolean result = solution.containsDuplicate(nums);
+
+            System.out.print("\nArray de entrada: [");
+            for (int i = 0; i < nums.length; i++) {
+                System.out.print(nums[i] + (i < nums.length - 1 ? ", " : ""));
+            }
+            System.out.println("]");
+
+            System.out.println("Resultado: " + result);
+            System.out.println(result ? "Existem elementos duplicados." : "Todos os elementos sao distintos.");
+
+        } catch (NumberFormatException e) {
+            System.out.println("Erro: Por favor, insira apenas numeros inteiros validos.");
+        }
     }
 }
