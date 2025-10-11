@@ -1,51 +1,45 @@
-import java.util.Scanner;
 
 public class Solution {
 
-    public String mergeAlternately(String word1, String word2) {
-        StringBuilder merged = new StringBuilder();
-        int len1 = word1.length();
-        int len2 = word2.length();
+    private static int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
 
-        int minLength = Math.min(len1, len2);
 
-        for (int i = 0; i < minLength; i++) {
-            merged.append(word1.charAt(i));
-            merged.append(word2.charAt(i));
+    public static String gcdOfStrings(String str1, String str2) {
+        if (!(str1 + str2).equals(str2 + str1)) {
+            return "";
         }
 
+        int len1 = str1.length();
+        int len2 = str2.length();
+        int gcdLength = gcd(len1, len2);
 
-        if (len1 > minLength) {
-            merged.append(word1.substring(minLength));
-        }
-
-        if (len2 > minLength) {
-            merged.append(word2.substring(minLength));
-        }
-
-        return merged.toString();
+        return str1.substring(0, gcdLength);
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Solution solution = new Solution();
+        String str1_1 = "ABCABC";
+        String str2_1 = "ABC";
+        String result1 = gcdOfStrings(str1_1, str2_1);
+        System.out.println("Input: str1 = \"" + str1_1 + "\", str2 = \"" + str2_1 + "\"");
+        System.out.println("Output: \"" + result1 + "\"");
 
-        System.out.println("--- Fusao de Strings Alternada ---");
+        String str1_2 = "ABABAB";
+        String str2_2 = "ABAB";
+        String result2 = gcdOfStrings(str1_2, str2_2);
+        System.out.println("Input: str1 = \"" + str1_2 + "\", str2 = \"" + str2_2 + "\"");
+        System.out.println("Output: \"" + result2 + "\"");
 
-        System.out.print("Digite a primeira palavra (word1): ");
-        String word1 = scanner.nextLine();
-
-        System.out.print("Digite a segunda palavra (word2): ");
-        String word2 = scanner.nextLine();
-
-        String result = solution.mergeAlternately(word1, word2);
-
-        System.out.println("\n----------------------------------");
-        System.out.println("Palavra 1: \"" + word1 + "\"");
-        System.out.println("Palavra 2: \"" + word2 + "\"");
-        System.out.println("Resultado da Fusao: \"" + result + "\"");
-        System.out.println("----------------------------------");
-
-        scanner.close();
+        String str1_3 = "LEET";
+        String str2_3 = "CODE";
+        String result3 = gcdOfStrings(str1_3, str2_3);
+        System.out.println("Input: str1 = \"" + str1_3 + "\", str2 = \"" + str2_3 + "\"");
+        System.out.println("Output: \"" + result3 + "\"");
     }
 }
