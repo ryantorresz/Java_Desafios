@@ -1,19 +1,25 @@
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
 
 public class Solution {
 
 
-    public boolean containsDuplicate(int[] nums) {
+    public boolean containsNearbyDuplicate(int[] nums, int k) {
+        Map<Integer, Integer> lastSeenIndex = new HashMap<>();
 
-        Set<Integer> seen = new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            int currentNum = nums[i];
 
-        for (int num : nums) {
-            if (seen.contains(num)) {
-                return true;
+            if (lastSeenIndex.containsKey(currentNum)) {
+                int lastIndex = lastSeenIndex.get(currentNum);
+
+                if (i - lastIndex <= k) {
+                    return true;
+                }
             }
-            seen.add(num);
+
+            lastSeenIndex.put(currentNum, i);
         }
 
         return false;
@@ -23,37 +29,42 @@ public class Solution {
         Scanner scanner = new Scanner(System.in);
         Solution solution = new Solution();
 
-        System.out.println("--- Verificador de Duplicatas ---");
-        System.out.println("Digite a sequencia de numeros inteiros, separados por espaco:");
-        System.out.println("Exemplo: 1 2 3 1");
+        System.out.println("--- Contem Duplicatas II ---");
+        System.out.println("Digite a sequencia de numeros inteiros separados por espaco (Ex: 1 2 3 1):");
 
         String inputLine = scanner.nextLine();
+
+        System.out.println("Digite o valor maximo de distancia (k):");
+        int k = 0;
+        if (scanner.hasNextInt()) {
+            k = scanner.nextInt();
+        } else {
+            System.out.println("Erro: k deve ser um numero inteiro.");
+            scanner.close();
+            return;
+        }
         scanner.close();
 
         if (inputLine.trim().isEmpty()) {
-            System.out.println("Nenhum numero inserido.");
+            System.out.println("Nenhum numero inserido. Resultado: false");
             return;
         }
 
         try {
             String[] numStrings = inputLine.trim().split("\\s+");
-
             int[] nums = new int[numStrings.length];
 
             for (int i = 0; i < numStrings.length; i++) {
+                if (numStrings[i].isEmpty()) continue;
                 nums[i] = Integer.parseInt(numStrings[i]);
             }
 
-            boolean result = solution.containsDuplicate(nums);
+            boolean result = solution.containsNearbyDuplicate(nums, k);
 
-            System.out.print("\nArray de entrada: [");
-            for (int i = 0; i < nums.length; i++) {
-                System.out.print(nums[i] + (i < nums.length - 1 ? ", " : ""));
-            }
-            System.out.println("]");
-
+            System.out.print("\nArray de entrada: ");
+            System.out.print(java.util.Arrays.toString(nums));
+            System.out.println("\nDistancia k: " + k);
             System.out.println("Resultado: " + result);
-            System.out.println(result ? "Existem elementos duplicados." : "Todos os elementos sao distintos.");
 
         } catch (NumberFormatException e) {
             System.out.println("Erro: Por favor, insira apenas numeros inteiros validos.");
