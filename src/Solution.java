@@ -1,73 +1,51 @@
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Scanner;
 
 public class Solution {
 
+    public String mergeAlternately(String word1, String word2) {
+        StringBuilder merged = new StringBuilder();
+        int len1 = word1.length();
+        int len2 = word2.length();
 
-    public boolean containsNearbyDuplicate(int[] nums, int k) {
-        Map<Integer, Integer> lastSeenIndex = new HashMap<>();
+        int minLength = Math.min(len1, len2);
 
-        for (int i = 0; i < nums.length; i++) {
-            int currentNum = nums[i];
-
-            if (lastSeenIndex.containsKey(currentNum)) {
-                int lastIndex = lastSeenIndex.get(currentNum);
-
-                if (i - lastIndex <= k) {
-                    return true;
-                }
-            }
-
-            lastSeenIndex.put(currentNum, i);
+        for (int i = 0; i < minLength; i++) {
+            merged.append(word1.charAt(i));
+            merged.append(word2.charAt(i));
         }
 
-        return false;
+
+        if (len1 > minLength) {
+            merged.append(word1.substring(minLength));
+        }
+
+        if (len2 > minLength) {
+            merged.append(word2.substring(minLength));
+        }
+
+        return merged.toString();
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Solution solution = new Solution();
 
-        System.out.println("--- Contem Duplicatas II ---");
-        System.out.println("Digite a sequencia de numeros inteiros separados por espaco (Ex: 1 2 3 1):");
+        System.out.println("--- Fusao de Strings Alternada ---");
 
-        String inputLine = scanner.nextLine();
+        System.out.print("Digite a primeira palavra (word1): ");
+        String word1 = scanner.nextLine();
 
-        System.out.println("Digite o valor maximo de distancia (k):");
-        int k = 0;
-        if (scanner.hasNextInt()) {
-            k = scanner.nextInt();
-        } else {
-            System.out.println("Erro: k deve ser um numero inteiro.");
-            scanner.close();
-            return;
-        }
+        System.out.print("Digite a segunda palavra (word2): ");
+        String word2 = scanner.nextLine();
+
+        String result = solution.mergeAlternately(word1, word2);
+
+        System.out.println("\n----------------------------------");
+        System.out.println("Palavra 1: \"" + word1 + "\"");
+        System.out.println("Palavra 2: \"" + word2 + "\"");
+        System.out.println("Resultado da Fusao: \"" + result + "\"");
+        System.out.println("----------------------------------");
+
         scanner.close();
-
-        if (inputLine.trim().isEmpty()) {
-            System.out.println("Nenhum numero inserido. Resultado: false");
-            return;
-        }
-
-        try {
-            String[] numStrings = inputLine.trim().split("\\s+");
-            int[] nums = new int[numStrings.length];
-
-            for (int i = 0; i < numStrings.length; i++) {
-                if (numStrings[i].isEmpty()) continue;
-                nums[i] = Integer.parseInt(numStrings[i]);
-            }
-
-            boolean result = solution.containsNearbyDuplicate(nums, k);
-
-            System.out.print("\nArray de entrada: ");
-            System.out.print(java.util.Arrays.toString(nums));
-            System.out.println("\nDistancia k: " + k);
-            System.out.println("Resultado: " + result);
-
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: Por favor, insira apenas numeros inteiros validos.");
-        }
     }
 }
