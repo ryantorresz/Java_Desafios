@@ -1,70 +1,41 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Arrays;
+import java.util.Set;
 
 class Solution {
+    public String reverseVowels(String s) {
+        if (s == null || s.length() == 0) return s;
 
-    public List<Boolean> kidsWithCandies(int[] candies, int extraCandies) {
+        Set<Character> vowels = Set.of('a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U');
+        char[] chars = s.toCharArray();
+        int left = 0, right = chars.length - 1;
 
-        int maxCandies = 0;
-        for (int candy : candies) {
-            if (candy > maxCandies) {
-                maxCandies = candy;
+        while (left < right) {
+            while (left < right && !vowels.contains(chars[left])) left++;
+            while (left < right && !vowels.contains(chars[right])) right--;
+
+            if (left < right) {
+                char temp = chars[left];
+                chars[left] = chars[right];
+                chars[right] = temp;
+                left++;
+                right--;
             }
         }
 
-        List<Boolean> result = new ArrayList<>();
-
-        for (int i = 0; i < candies.length; i++) {
-            if (candies[i] + extraCandies >= maxCandies) {
-                result.add(true);
-            } else {
-                result.add(false);
-            }
-        }
-
-        return result;
+        return new String(chars);
     }
-}
-
-// Classe principal para interação e teste
-public class KidsWithCandiesInteractive {
 
     public static void main(String[] args) {
+        Solution solution = new Solution();
 
-        // Inicializa o Scanner para ler a entrada do usuário
-        Scanner scanner = new Scanner(System.in);
-        Solution solver = new Solution();
+        System.out.println("Input: IceCreAm -> Output: " + solution.reverseVowels("IceCreAm"));
+        System.out.println("Input: leetcode -> Output: " + solution.reverseVowels("leetcode"));
 
-        System.out.println("--- Verificador de Maior Quantidade de Doces ---");
-
-        try {
-            // Pede a entrada dos doces
-            System.out.print("Digite as quantidades de doces das crianças, separadas por vírgula (ex: 2,3,5,1,3): ");
-            String candiesInput = scanner.nextLine();
-
-            // Converte a string de entrada para um array de inteiros (int[])
-            int[] candies = Arrays.stream(candiesInput.split(","))
-                    .map(String::trim) // Remove espaços em branco
-                    .mapToInt(Integer::parseInt)
-                    .toArray();
-
-            System.out.print("Digite a quantidade de doces extras: ");
-            int extraCandies = scanner.nextInt();
-
-            List<Boolean> result = solver.kidsWithCandies(candies, extraCandies);
-
-            System.out.println("\n--- Resultado ---");
-            System.out.println("Doces Iniciais: " + Arrays.toString(candies));
-            System.out.println("Doces Extras: " + extraCandies);
-            System.out.println("O Array Booleano é: " + result);
-            System.out.println("\n(True significa que a criança pode ter o maior número de doces)");
-
-        } catch (Exception e) {
-            System.out.println("\nErro na entrada. Por favor, insira um formato válido (ex: 2,3,5,1,3 para doces).");
-        } finally {
-            scanner.close();
-        }
+        System.out.println("Input: hello -> Output: " + solution.reverseVowels("hello"));
+        System.out.println("Input: AEIOU -> Output: " + solution.reverseVowels("AEIOU"));
+        System.out.println("Input: aA -> Output: " + solution.reverseVowels("aA"));
+        System.out.println("Input: xyz -> Output: " + solution.reverseVowels("xyz"));
+        System.out.println("Input: empty string -> Output: " + solution.reverseVowels(""));
+        System.out.println("Input: a -> Output: " + solution.reverseVowels("a"));
+        System.out.println("Input: programming -> Output: " + solution.reverseVowels("programming"));
     }
 }
