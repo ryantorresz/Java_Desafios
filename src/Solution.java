@@ -1,85 +1,82 @@
-static class Solution {
+import java.util.Scanner;
+import java.util.Arrays;
 
-    public int [] productExceptSelf(int[] nums) {
+class Solution {
 
-        int n = nums.length;
+    public int maxArea(int[] height) {
+        int left = 0;
+        int right = height.length - 1;
 
+        int maxArea = 0;
 
-        int[] aswer = new int[n];
+        while (left < right) {
 
-        int prefixProduct = 1;
+            int width = right - left;
 
-        for (int i = 0; i < n; i++) {
+            int minHeight = Math.min(height[left], height[right]);
 
-            aswer[i] = prefixProduct;
-            prefixProduct *= nums[i];
+            int currentArea = width * minHeight;
+
+            maxArea = Math.max(maxArea, currentArea);
+
+            if (height[left] < height[right]) {
+                left++;
+            } else {
+                right--;
+            }
         }
 
-        int suffixProduct = 1;
-
-        for(int i = n - 1; i >= 0; i--) {
-            aswer[i] *= suffixProduct;
-
-            suffixProduct *= nums[i];
-        }
-
-
-        return aswer;
+        return maxArea;
     }
-}
 
+    public static void main(String[] args) {
+        Solution solver = new Solution();
+        Scanner scanner = new Scanner(System.in);
 
-public static void main(String[] args) {
-    Solution solver = new Solution();
-    Scanner scanner = new Scanner(System.in);
+        System.out.println("--- Contêiner com Mais Água (Max Area) ---");
+        System.out.println("Exemplo 1: [1,8,6,2,5,4,8,3,7] -> Saída Esperada: 49");
+        System.out.println("Exemplo 2: [1,1] -> Saída Esperada: 1");
+        System.out.println("------------------------------------------");
 
-    System.out.println("--- Teste de Produto do Array Exceto Ele Próprio ---");
-    System.out.println("Exemplo de Entrada: [1,2,3,4] -> Saída Esperada: [24,12,8,6]");
-    System.out.println("-----------------------------------------------------");
+        while (true) {
+            System.out.print("\nInsira as alturas do array separadas por vírgula (ex: 1,8,6,2,5,4,8,3,7) ou 'sair': ");
+            String input = scanner.nextLine().trim();
 
-    while (true) {
-        System.out.print("\nInsira os números do array separados por vírgula (ex: 1,2,3,4) ou 'sair': ");
-        String input = scanner.nextLine().trim();
-
-        if (input.equalsIgnoreCase("sair")) {
-            System.out.println("Programa encerrado.");
-            break;
-        }
-
-        if (input.isEmpty()) {
-            System.out.println("Entrada inválida. Por favor, insira uma sequência de números.");
-            continue;
-        }
-
-        try {
-            // Remove espaços e divide a string por vírgulas para obter os números
-            String[] parts = input.replaceAll("\\s+", "").split(",");
-
-            // Converte as strings em inteiros
-            int[] nums = new int[parts.length];
-            for (int i = 0; i < parts.length; i++) {
-                nums[i] = Integer.parseInt(parts[i]);
+            if (input.equalsIgnoreCase("sair")) {
+                System.out.println("Programa encerrado.");
+                break;
             }
 
-            // O problema exige no mínimo 2 elementos
-            if (nums.length < 2) {
-                System.out.println("O array deve conter pelo menos 2 elementos.");
+            if (input.isEmpty()) {
+                System.out.println("Entrada inválida. Por favor, insira uma sequência de números.");
                 continue;
             }
 
-            // Processa o array
-            int[] result = solver.productExceptSelf(nums);
+            try {
+                String[] parts = input.replaceAll("\\s+", "").split(",");
 
-            // Exibe o resultado
-            System.out.println("Array Original: " + Arrays.toString(nums));
-            System.out.println("Array Resultado: " + Arrays.toString(result));
+                int[] height = new int[parts.length];
+                for (int i = 0; i < parts.length; i++) {
+                    height[i] = Integer.parseInt(parts[i]);
+                }
 
-        } catch (NumberFormatException e) {
-            System.out.println("Erro: A entrada contém caracteres não numéricos. Por favor, use apenas números e vírgulas.");
-        } catch (Exception e) {
-            System.out.println("Ocorreu um erro: " + e.getMessage());
+                if (height.length < 2) {
+                    System.out.println("O array deve conter pelo menos 2 elementos.");
+                    continue;
+                }
+
+                int result = solver.maxArea(height);
+
+                System.out.println("Array Original: " + Arrays.toString(height));
+                System.out.println("Área Máxima Encontrada: " + result);
+
+            } catch (NumberFormatException e) {
+                System.out.println("Erro: A entrada contém caracteres não numéricos. Por favor, use apenas números inteiros e vírgulas.");
+            } catch (Exception e) {
+                System.out.println("Ocorreu um erro: " + e.getMessage());
+            }
         }
-    }
 
-    scanner.close();
+        scanner.close();
+    }
 }
