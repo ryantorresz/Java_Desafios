@@ -1,56 +1,85 @@
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+static class Solution {
 
-public class Solution {
+    public int [] productExceptSelf(int[] nums) {
+
+        int n = nums.length;
 
 
-    public String reverseWords(String s) {
+        int[] aswer = new int[n];
 
-        String[] wordsArray = s.trim().split("\\s+");
+        int prefixProduct = 1;
 
-        List<String> wordList = Arrays.asList(wordsArray);
+        for (int i = 0; i < n; i++) {
 
-        Collections.reverse(wordList);
+            aswer[i] = prefixProduct;
+            prefixProduct *= nums[i];
+        }
 
-        return String.join(" ", wordList);
+        int suffixProduct = 1;
+
+        for(int i = n - 1; i >= 0; i--) {
+            aswer[i] *= suffixProduct;
+
+            suffixProduct *= nums[i];
+        }
+
+
+        return aswer;
     }
+}
 
-    public static void main(String[] args) {
-        Solution solver = new Solution();
 
-        Scanner scanner = new Scanner(System.in);
+public static void main(String[] args) {
+    Solution solver = new Solution();
+    Scanner scanner = new Scanner(System.in);
 
-        System.out.println("--- Teste de Reversão de Palavras em uma String ---");
-        System.out.println("Exemplos de entrada:");
-        System.out.println("  \"the sky is blue\"");
-        System.out.println("  \"  hello world  \"");
-        System.out.println("  \"a good   example\"");
-        System.out.println("--------------------------------------------------");
+    System.out.println("--- Teste de Produto do Array Exceto Ele Próprio ---");
+    System.out.println("Exemplo de Entrada: [1,2,3,4] -> Saída Esperada: [24,12,8,6]");
+    System.out.println("-----------------------------------------------------");
 
-        while (true) {
-            System.out.print("\nInsira a string (ou digite 'sair' para encerrar): ");
-            String input = scanner.nextLine();
+    while (true) {
+        System.out.print("\nInsira os números do array separados por vírgula (ex: 1,2,3,4) ou 'sair': ");
+        String input = scanner.nextLine().trim();
 
-            if (input.equalsIgnoreCase("sair")) {
-                System.out.println("Programa encerrado.");
-                break;
+        if (input.equalsIgnoreCase("sair")) {
+            System.out.println("Programa encerrado.");
+            break;
+        }
+
+        if (input.isEmpty()) {
+            System.out.println("Entrada inválida. Por favor, insira uma sequência de números.");
+            continue;
+        }
+
+        try {
+            // Remove espaços e divide a string por vírgulas para obter os números
+            String[] parts = input.replaceAll("\\s+", "").split(",");
+
+            // Converte as strings em inteiros
+            int[] nums = new int[parts.length];
+            for (int i = 0; i < parts.length; i++) {
+                nums[i] = Integer.parseInt(parts[i]);
             }
 
-            if (input.isEmpty()) {
-                System.out.println("Entrada vazia. Por favor, insira uma string.");
+            // O problema exige no mínimo 2 elementos
+            if (nums.length < 2) {
+                System.out.println("O array deve conter pelo menos 2 elementos.");
                 continue;
             }
 
-            String cleanInput = input.replaceAll("^[\"']|[\"']$", "");
+            // Processa o array
+            int[] result = solver.productExceptSelf(nums);
 
-            String result = solver.reverseWords(cleanInput);
+            // Exibe o resultado
+            System.out.println("Array Original: " + Arrays.toString(nums));
+            System.out.println("Array Resultado: " + Arrays.toString(result));
 
-            System.out.println("String Original: \"" + cleanInput + "\"");
-            System.out.println("String Revertida: \"" + result + "\"");
+        } catch (NumberFormatException e) {
+            System.out.println("Erro: A entrada contém caracteres não numéricos. Por favor, use apenas números e vírgulas.");
+        } catch (Exception e) {
+            System.out.println("Ocorreu um erro: " + e.getMessage());
         }
-
-        scanner.close();
     }
+
+    scanner.close();
 }
