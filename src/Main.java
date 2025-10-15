@@ -1,70 +1,68 @@
-class Solution {
-    private boolean isVowel(char c) {
-        return c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u';
-    }
-
-    public int maxVowels(String s, int k) {
-        int currentVowelCount = 0;
-
-        for (int i = 0; i < k; i++) {
-            if (isVowel(s.charAt(i))) {
-                currentVowelCount++;
-            }
-        }
-
-        int maxVowelCount = currentVowelCount;
-
-        for (int i = k; i < s.length(); i++) {
-            if (isVowel(s.charAt(i))) {
-                currentVowelCount++;
-            }
-
-            if (isVowel(s.charAt(i - k))) {
-                currentVowelCount--;
-            }
-
-            maxVowelCount = Math.max(maxVowelCount, currentVowelCount);
-
-            if (maxVowelCount == k) {
-                return k;
-            }
-        }
-
-        return maxVowelCount;
-    }
-}
+import java.util.Scanner;
+import java.util.Arrays;
 
 
 public class Main {
+
+
+    public double findMaxAverage(int[] nums, int k) {
+        if (nums == null || k > nums.length || k <= 0) {
+            throw new IllegalArgumentException("Parâmetros inválidos: k deve ser <= n e > 0.");
+        }
+
+        long currentSum = 0;
+        for (int i = 0; i < k; i++) {
+            currentSum += nums[i];
+        }
+
+        long maxSum = currentSum;
+
+        for (int i = k; i < nums.length; i++) {
+            currentSum = currentSum - nums[i - k] + nums[i];
+
+            if (currentSum > maxSum) {
+                maxSum = currentSum;
+            }
+        }
+
+        return (double) maxSum / k;
+    }
+
     public static void main(String[] args) {
-        Solution solver = new Solution();
+        Scanner scanner = new Scanner(System.in);
 
-        String s1 = "abciiidef";
-        int k1 = 3;
-        int result1 = solver.maxVowels(s1, k1);
-        System.out.println("Input: s = \"" + s1 + "\", k = " + k1);
-        System.out.println("Output: " + result1); // Esperado: 3
-        System.out.println("--------------------");
+        System.out.println("--- 643. Maximum Average Subarray I ---");
 
-        String s2 = "aeiou";
-        int k2 = 2;
-        int result2 = solver.maxVowels(s2, k2);
-        System.out.println("Input: s = \"" + s2 + "\", k = " + k2);
-        System.out.println("Output: " + result2); // Esperado: 2
-        System.out.println("--------------------");
+        try {
+            System.out.print("Insira os números do array (separados por espaço, ex: 1 12 -5 -6 50 3): ");
+            String inputLine = scanner.nextLine();
 
-        String s3 = "leetcode";
-        int k3 = 3;
-        int result3 = solver.maxVowels(s3, k3);
-        System.out.println("Input: s = \"" + s3 + "\", k = " + k3);
-        System.out.println("Output: " + result3); // Esperado: 2
-        System.out.println("--------------------");
+            String[] numStrings = inputLine.trim().split("\\s+");
+            int[] nums = new int[numStrings.length];
+            for (int i = 0; i < numStrings.length; i++) {
+                nums[i] = Integer.parseInt(numStrings[i]);
+            }
 
-        String s4 = "rhythms";
-        int k4 = 4;
-        int result4 = solver.maxVowels(s4, k4);
-        System.out.println("Input: s = \"" + s4 + "\", k = " + k4);
-        System.out.println("Output: " + result4); // Esperado: 0
-        System.out.println("--------------------");
+            System.out.print("Insira o tamanho da submatriz k (ex: 4): ");
+            int k = scanner.nextInt();
+
+            Main mainInstance = new Main(); // Cria uma instância da classe para chamar o método
+            double maxAverage = mainInstance.findMaxAverage(nums, k);
+
+            System.out.println("\n-------------------------------------------");
+            System.out.println("Array de Entrada (nums): " + Arrays.toString(nums));
+            System.out.println("Tamanho da Submatriz (k): " + k);
+            System.out.printf("O MÁXIMO VALOR MÉDIO é: %.5f\n", maxAverage);
+            System.out.println("-------------------------------------------");
+
+        } catch (java.util.InputMismatchException e) {
+            System.err.println("Erro: A entrada de k é inválida. Por favor, insira um número inteiro.");
+        } catch (NumberFormatException e) {
+            System.err.println("Erro: A entrada de números do array é inválida. Por favor, insira apenas números inteiros separados por espaço.");
+        } catch (IllegalArgumentException e) {
+            System.err.println("Erro de Validação: " + e.getMessage());
+        } finally {
+            scanner.close();
+        }
     }
 }
