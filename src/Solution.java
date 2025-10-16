@@ -1,82 +1,76 @@
-import java.util.Scanner;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.lang.StringBuilder;
 
-class Solution {
+public class Solution {
 
-    public int maxArea(int[] height) {
-        int left = 0;
-        int right = height.length - 1;
 
-        int maxArea = 0;
+    public int equalPairs(int[][] grid) {
+        int n = grid.length;
+        int count = 0;
 
-        while (left < right) {
+        // Mapa para armazenar a frequência de cada linha única como String.
+        Map<String, Integer> rowCounts = new HashMap<>();
 
-            int width = right - left;
-
-            int minHeight = Math.min(height[left], height[right]);
-
-            int currentArea = width * minHeight;
-
-            maxArea = Math.max(maxArea, currentArea);
-
-            if (height[left] < height[right]) {
-                left++;
-            } else {
-                right--;
-            }
+        // 1. Contar a Frequência de Todas as Linhas
+        for (int[] row : grid) {
+            String rowString = arrayToString(row);
+            rowCounts.put(rowString, rowCounts.getOrDefault(rowString, 0) + 1);
         }
 
-        return maxArea;
+        // 2. Iterar pelas Colunas e Verificar a Correspondência no Mapa
+        for (int j = 0; j < n; j++) { // Itera sobre as colunas
+            // Constrói a representação em String da coluna j
+            StringBuilder colBuilder = new StringBuilder();
+
+            for (int i = 0; i < n; i++) { // Itera sobre os elementos da coluna j
+                colBuilder.append(grid[i][j]);
+                if (i < n - 1) {
+                    colBuilder.append(","); // Usa o mesmo delimitador
+                }
+            }
+
+            String colString = colBuilder.toString();
+
+            // Adiciona a frequência da linha correspondente à contagem total.
+            count += rowCounts.getOrDefault(colString, 0);
+        }
+
+        return count;
     }
 
-    public static void main(String[] args) {
-        Solution solver = new Solution();
-        Scanner scanner = new Scanner(System.in);
-
-        System.out.println("--- Contêiner com Mais Água (Max Area) ---");
-        System.out.println("Exemplo 1: [1,8,6,2,5,4,8,3,7] -> Saída Esperada: 49");
-        System.out.println("Exemplo 2: [1,1] -> Saída Esperada: 1");
-        System.out.println("------------------------------------------");
-
-        while (true) {
-            System.out.print("\nInsira as alturas do array separadas por vírgula (ex: 1,8,6,2,5,4,8,3,7) ou 'sair': ");
-            String input = scanner.nextLine().trim();
-
-            if (input.equalsIgnoreCase("sair")) {
-                System.out.println("Programa encerrado.");
-                break;
-            }
-
-            if (input.isEmpty()) {
-                System.out.println("Entrada inválida. Por favor, insira uma sequência de números.");
-                continue;
-            }
-
-            try {
-                String[] parts = input.replaceAll("\\s+", "").split(",");
-
-                int[] height = new int[parts.length];
-                for (int i = 0; i < parts.length; i++) {
-                    height[i] = Integer.parseInt(parts[i]);
-                }
-
-                if (height.length < 2) {
-                    System.out.println("O array deve conter pelo menos 2 elementos.");
-                    continue;
-                }
-
-                int result = solver.maxArea(height);
-
-                System.out.println("Array Original: " + Arrays.toString(height));
-                System.out.println("Área Máxima Encontrada: " + result);
-
-            } catch (NumberFormatException e) {
-                System.out.println("Erro: A entrada contém caracteres não numéricos. Por favor, use apenas números inteiros e vírgulas.");
-            } catch (Exception e) {
-                System.out.println("Ocorreu um erro: " + e.getMessage());
+    private String arrayToString(int[] arr) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(arr[i]);
+            if (i < arr.length - 1) {
+                sb.append(",");
             }
         }
+        return sb.toString();
+    }
+    public static void main(String[] args) {
+        Solution solution = new Solution();
 
-        scanner.close();
+
+        int[][] grid1 = {{3, 2, 1}, {1, 7, 6}, {2, 7, 7}};
+        int result1 = solution.equalPairs(grid1);
+        System.out.println("Exemplo 1:");
+        System.out.println("Entrada: [[3,2,1],[1,7,6],[2,7,7]]");
+        System.out.println("Saída Obtida: " + result1);
+        System.out.println("---------------------------------");
+
+        int[][] grid2 = {{3, 1, 2, 2}, {1, 4, 4, 5}, {2, 4, 2, 2}, {2, 4, 2, 2}};
+        int result2 = solution.equalPairs(grid2);
+        System.out.println("Exemplo 2:");
+        System.out.println("Entrada: [[3,1,2,2],[1,4,4,5],[2,4,2,2],[2,4,2,2]]");
+        System.out.println("Saída Obtida: " + result2);
+        System.out.println("---------------------------------");
+
+        int[][] grid3 = {{1, 1}, {1, 1}};
+        int result3 = solution.equalPairs(grid3);
+        System.out.println("Exemplo 3 (Extra):");
+        System.out.println("Entrada: [[1,1],[1,1]]");
+        System.out.println("Saída Obtida: " + result3);
     }
 }
