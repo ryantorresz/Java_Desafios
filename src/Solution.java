@@ -1,82 +1,86 @@
-import java.util.Scanner;
-import java.util.Arrays;
+class DeleteMiddleNode {
 
-class Solution {
+    public static class ListNode {
+        int val;
+        ListNode next;
 
-    public int maxArea(int[] height) {
-        int left = 0;
-        int right = height.length - 1;
+        ListNode() {}
 
-        int maxArea = 0;
-
-        while (left < right) {
-
-            int width = right - left;
-
-            int minHeight = Math.min(height[left], height[right]);
-
-            int currentArea = width * minHeight;
-
-            maxArea = Math.max(maxArea, currentArea);
-
-            if (height[left] < height[right]) {
-                left++;
-            } else {
-                right--;
-            }
+        ListNode(int val) {
+            this.val = val;
         }
 
-        return maxArea;
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder sb = new StringBuilder();
+            ListNode current = this;
+            while (current != null) {
+                sb.append(current.val);
+                if (current.next != null) {
+                    sb.append(" -> ");
+                }
+                current = current.next;
+            }
+            return sb.toString();
+        }
+    }
+
+    static class Solution {
+        public ListNode deleteMiddle(ListNode head) {
+
+            if (head == null || head.next == null) {
+                return null;
+            }
+
+            ListNode slow = head;
+            ListNode fast = head;
+            ListNode prev = null;
+
+            while (fast != null && fast.next != null) {
+
+                prev = slow;
+
+                slow = slow.next;
+
+                fast = fast.next.next;
+            }
+
+            prev.next = slow.next;
+
+            return head;
+        }
     }
 
     public static void main(String[] args) {
-        Solution solver = new Solution();
-        Scanner scanner = new Scanner(System.in);
+        Solution solution = new Solution();
 
-        System.out.println("--- Contêiner com Mais Água (Max Area) ---");
-        System.out.println("Exemplo 1: [1,8,6,2,5,4,8,3,7] -> Saída Esperada: 49");
-        System.out.println("Exemplo 2: [1,1] -> Saída Esperada: 1");
-        System.out.println("------------------------------------------");
+        ListNode head1 = new ListNode(1, new ListNode(3, new ListNode(4, new ListNode(7, new ListNode(1, new ListNode(2, new ListNode(6)))))));
+        System.out.println("--- Exemplo 1 (N=7) ---");
+        System.out.println("Original: " + head1.toString());
+        ListNode result1 = solution.deleteMiddle(head1);
+        System.out.println("Resultado: " + (result1 != null ? result1.toString() : "Lista Vazia"));
 
-        while (true) {
-            System.out.print("\nInsira as alturas do array separadas por vírgula (ex: 1,8,6,2,5,4,8,3,7) ou 'sair': ");
-            String input = scanner.nextLine().trim();
+        ListNode head2 = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4))));
+        System.out.println("\n--- Exemplo 2 (N=4) ---");
+        System.out.println("Original: " + head2.toString());
+        ListNode result2 = solution.deleteMiddle(head2);
+        System.out.println("Resultado: " + (result2 != null ? result2.toString() : "Lista Vazia"));
 
-            if (input.equalsIgnoreCase("sair")) {
-                System.out.println("Programa encerrado.");
-                break;
-            }
+        ListNode head3 = new ListNode(2, new ListNode(1));
+        System.out.println("\n--- Exemplo 3 (N=2) ---");
+        System.out.println("Original: " + head3.toString());
+        ListNode result3 = solution.deleteMiddle(head3);
+        System.out.println("Resultado: " + (result3 != null ? result3.toString() : "Lista Vazia"));
 
-            if (input.isEmpty()) {
-                System.out.println("Entrada inválida. Por favor, insira uma sequência de números.");
-                continue;
-            }
-
-            try {
-                String[] parts = input.replaceAll("\\s+", "").split(",");
-
-                int[] height = new int[parts.length];
-                for (int i = 0; i < parts.length; i++) {
-                    height[i] = Integer.parseInt(parts[i]);
-                }
-
-                if (height.length < 2) {
-                    System.out.println("O array deve conter pelo menos 2 elementos.");
-                    continue;
-                }
-
-                int result = solver.maxArea(height);
-
-                System.out.println("Array Original: " + Arrays.toString(height));
-                System.out.println("Área Máxima Encontrada: " + result);
-
-            } catch (NumberFormatException e) {
-                System.out.println("Erro: A entrada contém caracteres não numéricos. Por favor, use apenas números inteiros e vírgulas.");
-            } catch (Exception e) {
-                System.out.println("Ocorreu um erro: " + e.getMessage());
-            }
-        }
-
-        scanner.close();
+        ListNode head4 = new ListNode(5);
+        System.out.println("\n--- Exemplo 4 (N=1) ---");
+        System.out.println("Original: " + head4.toString());
+        ListNode result4 = solution.deleteMiddle(head4);
+        System.out.println("Resultado: " + (result4 != null ? result4.toString() : "Lista Vazia"));
     }
 }
