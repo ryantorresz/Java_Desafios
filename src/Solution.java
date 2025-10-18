@@ -1,86 +1,62 @@
-class DeleteMiddleNode {
+import java.util.HashMap;
+import java.util.Map;
 
-    public static class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode() {}
-
-        ListNode(int val) {
-            this.val = val;
+class Solution {
+    public int maxOperations(int[] nums, int k) {
+        Map<Integer, Integer> freqMap = new HashMap<>();
+        for (int num : nums) {
+            freqMap.put(num, freqMap.getOrDefault(num, 0) + 1);
         }
 
-        ListNode(int val, ListNode next) {
-            this.val = val;
-            this.next = next;
-        }
+        int operations = 0;
 
-        @Override
-        public String toString() {
-            StringBuilder sb = new StringBuilder();
-            ListNode current = this;
-            while (current != null) {
-                sb.append(current.val);
-                if (current.next != null) {
-                    sb.append(" -> ");
+        for (int num : nums) {
+            int complement = k - num;
+
+            if (freqMap.getOrDefault(num, 0) <= 0) {
+                continue;
+            }
+
+            if (complement != num) {
+                if (freqMap.getOrDefault(complement, 0) > 0) {
+                    freqMap.put(num, freqMap.get(num) - 1);
+                    freqMap.put(complement, freqMap.get(complement) - 1);
+                    operations++;
                 }
-                current = current.next;
+
+            } else {
+                if (freqMap.get(num) >= 2) {
+                    freqMap.put(num, freqMap.get(num) - 2);
+                    operations++;
+                }
             }
-            return sb.toString();
         }
-    }
 
-    static class Solution {
-        public ListNode deleteMiddle(ListNode head) {
-
-            if (head == null || head.next == null) {
-                return null;
-            }
-
-            ListNode slow = head;
-            ListNode fast = head;
-            ListNode prev = null;
-
-            while (fast != null && fast.next != null) {
-
-                prev = slow;
-
-                slow = slow.next;
-
-                fast = fast.next.next;
-            }
-
-            prev.next = slow.next;
-
-            return head;
-        }
+        return operations;
     }
 
     public static void main(String[] args) {
-        Solution solution = new Solution();
+        Solution solver = new Solution();
 
-        ListNode head1 = new ListNode(1, new ListNode(3, new ListNode(4, new ListNode(7, new ListNode(1, new ListNode(2, new ListNode(6)))))));
-        System.out.println("--- Exemplo 1 (N=7) ---");
-        System.out.println("Original: " + head1.toString());
-        ListNode result1 = solution.deleteMiddle(head1);
-        System.out.println("Resultado: " + (result1 != null ? result1.toString() : "Lista Vazia"));
+        int[] nums1 = {1, 2, 3, 4};
+        int k1 = 5;
+        int result1 = solver.maxOperations(nums1, k1);
+        System.out.println("Example 1:");
+        System.out.println("Input: nums = [1, 2, 3, 4], k = 5");
+        System.out.println("Max Operations: " + result1);
 
-        ListNode head2 = new ListNode(1, new ListNode(2, new ListNode(3, new ListNode(4))));
-        System.out.println("\n--- Exemplo 2 (N=4) ---");
-        System.out.println("Original: " + head2.toString());
-        ListNode result2 = solution.deleteMiddle(head2);
-        System.out.println("Resultado: " + (result2 != null ? result2.toString() : "Lista Vazia"));
+        int[] nums2 = {3, 1, 3, 4, 3};
+        int k2 = 6;
+        int result2 = solver.maxOperations(nums2, k2);
+        System.out.println("\nExample 2:");
+        System.out.println("Input: nums = [3, 1, 3, 4, 3], k = 6");
+        System.out.println("Max Operations: " + result2);
 
-        ListNode head3 = new ListNode(2, new ListNode(1));
-        System.out.println("\n--- Exemplo 3 (N=2) ---");
-        System.out.println("Original: " + head3.toString());
-        ListNode result3 = solution.deleteMiddle(head3);
-        System.out.println("Resultado: " + (result3 != null ? result3.toString() : "Lista Vazia"));
-
-        ListNode head4 = new ListNode(5);
-        System.out.println("\n--- Exemplo 4 (N=1) ---");
-        System.out.println("Original: " + head4.toString());
-        ListNode result4 = solution.deleteMiddle(head4);
-        System.out.println("Resultado: " + (result4 != null ? result4.toString() : "Lista Vazia"));
+        int[] nums3 = {4, 4, 1, 3, 1, 3, 2, 2};
+        int k3 = 4;
+        int result3 = solver.maxOperations(nums3, k3);
+        System.out.println("\nExample 3:");
+        System.out.println("Input: nums = [4, 4, 1, 3, 1, 3, 2, 2], k = 4");
+        System.out.println("Max Operations: " + result3);
     }
 }
