@@ -1,4 +1,4 @@
-public class CaixeiroViajanteSimplificado {
+public class CaixeiroViajante {
 
     public static class Main {
         public static void main(String[] args) {
