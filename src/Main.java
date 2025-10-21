@@ -81,3 +81,5 @@ public class Main {
         System.out.println("Input: [1,100000], Max Twin Sum: " + result3 + " (Expected: 100001)");
     }
 }
+
+// ajuste asus
