@@ -1,68 +1,83 @@
-import java.util.Scanner;
-import java.util.Arrays;
 
+class ListNode {
+    int val;
+    ListNode next;
+    ListNode() {}
+    ListNode(int val) { this.val = val; }
+    ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+}
+
+class Solution {
+
+    private ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode current = head;
+        while (current != null) {
+            ListNode nextTemp = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextTemp;
+        }
+        return prev;
+    }
+
+    public int maximumTwinSum(ListNode head) {
+        ListNode slow = head;
+        ListNode fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode headSecondHalfReversed = reverseList(slow);
+
+        ListNode p1 = head;
+        ListNode p2 = headSecondHalfReversed;
+        int maxTwinSum = 0;
+
+        while (p2 != null) {
+            int twinSum = p1.val + p2.val;
+            maxTwinSum = Math.max(maxTwinSum, twinSum);
+
+            p1 = p1.next;
+            p2 = p2.next;
+        }
+
+        return maxTwinSum;
+    }
+}
 
 public class Main {
-
-
-    public double findMaxAverage(int[] nums, int k) {
-        if (nums == null || k > nums.length || k <= 0) {
-            throw new IllegalArgumentException("Parâmetros inválidos: k deve ser <= n e > 0.");
+    public static ListNode createLinkedList(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return null;
         }
-
-        long currentSum = 0;
-        for (int i = 0; i < k; i++) {
-            currentSum += nums[i];
+        ListNode dummy = new ListNode(0);
+        ListNode current = dummy;
+        for (int val : arr) {
+            current.next = new ListNode(val);
+            current = current.next;
         }
-
-        long maxSum = currentSum;
-
-        for (int i = k; i < nums.length; i++) {
-            currentSum = currentSum - nums[i - k] + nums[i];
-
-            if (currentSum > maxSum) {
-                maxSum = currentSum;
-            }
-        }
-
-        return (double) maxSum / k;
+        return dummy.next;
     }
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Solution solution = new Solution();
 
-        System.out.println("--- 643. Maximum Average Subarray I ---");
+        int[] arr1 = {5, 4, 2, 1};
+        ListNode head1 = createLinkedList(arr1);
+        int result1 = solution.maximumTwinSum(head1);
+        System.out.println("Input: [5,4,2,1], Max Twin Sum: " + result1 + " (Expected: 6)");
 
-        try {
-            System.out.print("Insira os números do array (separados por espaço, ex: 1 12 -5 -6 50 3): ");
-            String inputLine = scanner.nextLine();
+        int[] arr2 = {4, 2, 2, 3};
+        ListNode head2 = createLinkedList(arr2);
+        int result2 = solution.maximumTwinSum(head2);
+        System.out.println("Input: [4,2,2,3], Max Twin Sum: " + result2 + " (Expected: 7)");
 
-            String[] numStrings = inputLine.trim().split("\\s+");
-            int[] nums = new int[numStrings.length];
-            for (int i = 0; i < numStrings.length; i++) {
-                nums[i] = Integer.parseInt(numStrings[i]);
-            }
-
-            System.out.print("Insira o tamanho da submatriz k (ex: 4): ");
-            int k = scanner.nextInt();
-
-            Main mainInstance = new Main(); // Cria uma instância da classe para chamar o método
-            double maxAverage = mainInstance.findMaxAverage(nums, k);
-
-            System.out.println("\n-------------------------------------------");
-            System.out.println("Array de Entrada (nums): " + Arrays.toString(nums));
-            System.out.println("Tamanho da Submatriz (k): " + k);
-            System.out.printf("O MÁXIMO VALOR MÉDIO é: %.5f\n", maxAverage);
-            System.out.println("-------------------------------------------");
-
-        } catch (java.util.InputMismatchException e) {
-            System.err.println("Erro: A entrada de k é inválida. Por favor, insira um número inteiro.");
-        } catch (NumberFormatException e) {
-            System.err.println("Erro: A entrada de números do array é inválida. Por favor, insira apenas números inteiros separados por espaço.");
-        } catch (IllegalArgumentException e) {
-            System.err.println("Erro de Validação: " + e.getMessage());
-        } finally {
-            scanner.close();
-        }
+        int[] arr3 = {1, 100000};
+        ListNode head3 = createLinkedList(arr3);
+        int result3 = solution.maximumTwinSum(head3);
+        System.out.println("Input: [1,100000], Max Twin Sum: " + result3 + " (Expected: 100001)");
     }
 }
