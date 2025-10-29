@@ -1,40 +1,37 @@
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class Solution {
 
     public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
 
-        String inputData = "9\n-100\n50\n0\n56.6\n90\n0.12\n.12\n02.34\n000.000";
-        Scanner sc = new Scanner(inputData);
+        int n = scan.nextInt();
 
-        int n = sc.nextInt();
-        String[] s = new String[n];
+        int[] a = new int[n];
         for (int i = 0; i < n; i++) {
-            s[i] = sc.next();
+            a[i] = scan.nextInt();
         }
-        sc.close();
+
+        scan.close();
+
+        int negativeSubarrayCount = 0;
 
 
-        Comparator<String> customComparator = new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                BigDecimal bd1 = new BigDecimal(s1);
-                BigDecimal bd2 = new BigDecimal(s2);
+        for (int i = 0; i < n; i++) {
 
-                int comparison = bd2.compareTo(bd1);
+            int currentSum = 0;
 
-                return comparison;
+            for (int j = i; j < n; j++) {
+
+                currentSum += a[j];
+
+                if (currentSum < 0) {
+                    negativeSubarrayCount++;
+                }
             }
-        };
-
-        Arrays.sort(s, customComparator);
-
-        System.out.println("Resultados da Ordenacao Decrescente:");
-        for (int i = 0; i < n; i++) {
-            System.out.println(s[i]);
         }
+
+        System.out.println(negativeSubarrayCount);
     }
 }
