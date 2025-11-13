@@ -1,52 +1,47 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+class Solution {
+    public int findKthLargest(int[] nums, int k) {
+        int[] count = new int[20001];
 
-public class Solution {
+        for (int num : nums)
+            count[num + 10000]++;
+
+        for (int i = count.length - 1; i >= 0; i--)
+            if (count[i] > 0) {
+                k -= count[i];
+                if (k <= 0) return i - 10000;
+            }
+
+        return -1;
+    }
 
     public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
+        Solution solution = new Solution();
 
-        // Quantas linhas de números existirão
-        System.out.print("Digite o número de linhas: ");
-        int n = sc.nextInt();
+        // Teste 1
+        int[] nums1 = {3, 2, 1, 5, 6, 4};
+        int k1 = 2;
+        System.out.println("Array: [3, 2, 1, 5, 6, 4]");
+        System.out.println(k1 + "º maior elemento: " + solution.findKthLargest(nums1, k1));
+        System.out.println();
 
-        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+        // Teste 2
+        int[] nums2 = {3, 2, 3, 1, 2, 4, 5, 5, 6};
+        int k2 = 4;
+        System.out.println("Array: [3, 2, 3, 1, 2, 4, 5, 5, 6]");
+        System.out.println(k2 + "º maior elemento: " + solution.findKthLargest(nums2, k2));
+        System.out.println();
 
-        // Lendo cada linha de números
-        for (int i = 0; i < n; i++) {
-            System.out.print("Quantos números na linha " + (i + 1) + "? ");
-            int d = sc.nextInt();
-            ArrayList<Integer> innerList = new ArrayList<>();
+        // Teste 3
+        int[] nums3 = {-1, -2, -3, -4, -5};
+        int k3 = 1;
+        System.out.println("Array: [-1, -2, -3, -4, -5]");
+        System.out.println(k3 + "º maior elemento: " + solution.findKthLargest(nums3, k3));
+        System.out.println();
 
-            if (d > 0) {
-                System.out.println("Digite " + d + " números separados por espaço:");
-            }
-
-            for (int j = 0; j < d; j++) {
-                innerList.add(sc.nextInt());
-            }
-
-            list.add(innerList);
-        }
-
-        // Quantas consultas (queries)
-        System.out.print("Digite o número de consultas: ");
-        int q = sc.nextInt();
-
-        // Executando as consultas
-        for (int i = 0; i < q; i++) {
-            System.out.print("Consulta " + (i + 1) + " (linha e posição): ");
-            int x = sc.nextInt(); // número da linha (1-indexado)
-            int y = sc.nextInt(); // posição na linha (1-indexado)
-
-            try {
-                int valor = list.get(x - 1).get(y - 1);
-                System.out.println("Resultado: " + valor);
-            } catch (Exception e) {
-                System.out.println("ERROR!");
-            }
-        }
-
-        sc.close();
+        // Teste 4
+        int[] nums4 = {7};
+        int k4 = 1;
+        System.out.println("Array: [7]");
+        System.out.println(k4 + "º maior elemento: " + solution.findKthLargest(nums4, k4));
     }
 }
