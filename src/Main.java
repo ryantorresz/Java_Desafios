@@ -1,96 +1,84 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 class Solution {
-    public int minEatingSpeed(int[] piles, int h) {
-        long low = 1;
+    // Mapeamento dos dígitos para letras
+    private final String[] digitToLetters = {
+            "",     // 0
+            "",     // 1
+            "abc",  // 2
+            "def",  // 3
+            "ghi",  // 4
+            "jkl",  // 5
+            "mno",  // 6
+            "pqrs", // 7
+            "tuv",  // 8
+            "wxyz"  // 9
+    };
 
-        long high = 0;
-        for (int pile : piles) {
-            high = Math.max(high, pile);
+    public List<String> letterCombinations(String digits) {
+        List<String> result = new ArrayList<>();
+
+        // Caso base: se a string estiver vazia, retorna lista vazia
+        if (digits == null || digits.length() == 0) {
+            return result;
         }
 
-        long minSpeed = high;
-
-        while (low <= high) {
-            long mid = low + (high - low) / 2;
-
-            if (canFinish(piles, h, mid)) {
-                minSpeed = mid;
-                high = mid - 1;
-            } else {
-                low = mid + 1;
-            }
-        }
-
-        return (int) minSpeed;
+        backtrack(result, digits, new StringBuilder(), 0);
+        return result;
     }
 
-    private boolean canFinish(int[] piles, int h, long k) {
-        long hoursNeeded = 0;
-
-        for (int pile : piles) {
-            hoursNeeded += ((long)pile + k - 1) / k;
-
-            if (hoursNeeded > h) {
-                return false;
-            }
+    private void backtrack(List<String> result, String digits, StringBuilder current, int index) {
+        // Se atingimos o final dos dígitos, adiciona a combinação ao resultado
+        if (index == digits.length()) {
+            result.add(current.toString());
+            return;
         }
 
-        return hoursNeeded <= h;
+        // Pega o dígito atual e suas letras correspondentes
+        char digit = digits.charAt(index);
+        String letters = digitToLetters[digit - '0'];
+
+        // Para cada letra correspondente ao dígito, faz recursão
+        for (char letter : letters.toCharArray()) {
+            current.append(letter); // Adiciona a letra
+            backtrack(result, digits, current, index + 1); // Chama para próximo dígito
+            current.deleteCharAt(current.length() - 1); // Backtrack: remove a letra
+        }
     }
 
+    // Método main para testar
     public static void main(String[] args) {
         Solution solution = new Solution();
 
         // Casos de teste
-        int[][] testPiles = {
-                {3, 6, 7, 11},     // Caso 1
-                {30, 11, 23, 4, 20}, // Caso 2
-                {30, 11, 23, 4, 20}, // Caso 3
-                {1, 1, 1, 1},       // Caso 4
-                {1000000000},       // Caso 5 - pile grande
-                {2, 2}              // Caso 6
+        String[] testCases = {
+                "23",
+                "",
+                "2",
+                "79",
+                "234"
         };
 
-        int[] testHours = {
-                8,   // Caso 1
-                5,   // Caso 2
-                6,   // Caso 3
-                4,   // Caso 4
-                2,   // Caso 5
-                2    // Caso 6
-        };
+        System.out.println("=== Letter Combinations of a Phone Number ===\n");
 
-        int[] expectedResults = {
-                4,  // Caso 1: k=4
-                30, // Caso 2: k=30
-                23, // Caso 3: k=23
-                1,  // Caso 4: k=1
-                500000000, // Caso 5: k=500000000
-                2
-        };
+        for (String digits : testCases) {
+            List<String> combinations = solution.letterCombinations(digits);
 
-        System.out.println("=== Testando Koko Eating Bananas ===\n");
-
-        for (int i = 0; i < testPiles.length; i++) {
-            int result = solution.minEatingSpeed(testPiles[i], testHours[i]);
-            boolean passed = (result == expectedResults[i]);
-
-            System.out.println("Caso " + (i + 1) + ":");
-            System.out.println("  Pilhas: " + Arrays.toString(testPiles[i]));
-            System.out.println("  Horas (h): " + testHours[i]);
-            System.out.println("  Velocidade esperada: " + expectedResults[i]);
-            System.out.println("  Velocidade calculada: " + result);
-            System.out.println("  Status: " + (passed ? "✓ PASSOU" : "✗ FALHOU"));
+            System.out.println("Input: \"" + digits + "\"");
+            System.out.println("Output: " + combinations);
+            System.out.println("Number of combinations: " + combinations.size());
             System.out.println();
         }
 
-        System.out.println("=== Teste Interativo ===");
-        int[] customPiles = {3, 6, 7, 11};
-        int customHours = 8;
-        int customResult = solution.minEatingSpeed(customPiles, customHours);
-        System.out.println("Pilhas: " + Arrays.toString(customPiles));
-        System.out.println("Horas disponíveis: " + customHours);
-        System.out.println("Velocidade mínima necessária: " + customResult);
+        // Exemplo detalhado
+        System.out.println("=== Exemplo Detalhado ===");
+        String example = "23";
+        List<String> result = solution.letterCombinations(example);
+        System.out.println("Dígitos: " + example);
+        System.out.println("Combinações: " + result);
+        System.out.println("Explicação:");
+        System.out.println("  2 -> abc, 3 -> def");
+        System.out.println("  Combinações: a+d, a+e, a+f, b+d, b+e, b+f, c+d, c+e, c+f");
     }
 }
