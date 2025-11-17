@@ -2,48 +2,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Solution {
-    // Mapeamento dos dígitos para letras
-    private final String[] digitToLetters = {
-            "",     // 0
-            "",     // 1
-            "abc",  // 2
-            "def",  // 3
-            "ghi",  // 4
-            "jkl",  // 5
-            "mno",  // 6
-            "pqrs", // 7
-            "tuv",  // 8
-            "wxyz"  // 9
-    };
-
-    public List<String> letterCombinations(String digits) {
-        List<String> result = new ArrayList<>();
-
-        // Caso base: se a string estiver vazia, retorna lista vazia
-        if (digits == null || digits.length() == 0) {
-            return result;
-        }
-
-        backtrack(result, digits, new StringBuilder(), 0);
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> result = new ArrayList<>();
+        backtrack(result, new ArrayList<>(), k, n, 1);
         return result;
     }
 
-    private void backtrack(List<String> result, String digits, StringBuilder current, int index) {
-        // Se atingimos o final dos dígitos, adiciona a combinação ao resultado
-        if (index == digits.length()) {
-            result.add(current.toString());
+    private void backtrack(List<List<Integer>> result, List<Integer> current,
+                           int k, int remaining, int start) {
+        // Caso base: se usamos k números
+        if (current.size() == k) {
+            if (remaining == 0) {
+                result.add(new ArrayList<>(current));
+            }
             return;
         }
 
-        // Pega o dígito atual e suas letras correspondentes
-        char digit = digits.charAt(index);
-        String letters = digitToLetters[digit - '0'];
+        // Tenta números de start até 9
+        for (int i = start; i <= 9; i++) {
+            // Poda: se o número atual é muito grande, para o loop
+            if (i > remaining) {
+                break;
+            }
 
-        // Para cada letra correspondente ao dígito, faz recursão
-        for (char letter : letters.toCharArray()) {
-            current.append(letter); // Adiciona a letra
-            backtrack(result, digits, current, index + 1); // Chama para próximo dígito
-            current.deleteCharAt(current.length() - 1); // Backtrack: remove a letra
+            current.add(i);
+            backtrack(result, current, k, remaining - i, i + 1);
+            current.remove(current.size() - 1); // backtrack
         }
     }
 
@@ -51,34 +35,42 @@ class Solution {
     public static void main(String[] args) {
         Solution solution = new Solution();
 
-        // Casos de teste
-        String[] testCases = {
-                "23",
-                "",
-                "2",
-                "79",
-                "234"
-        };
+        System.out.println("=== Teste Combination Sum III ===");
 
-        System.out.println("=== Letter Combinations of a Phone Number ===\n");
+        // Teste 1
+        System.out.println("\nTeste 1: k=3, n=7");
+        List<List<Integer>> result1 = solution.combinationSum3(3, 7);
+        printResult(result1);
 
-        for (String digits : testCases) {
-            List<String> combinations = solution.letterCombinations(digits);
+        // Teste 2
+        System.out.println("\nTeste 2: k=3, n=9");
+        List<List<Integer>> result2 = solution.combinationSum3(3, 9);
+        printResult(result2);
 
-            System.out.println("Input: \"" + digits + "\"");
-            System.out.println("Output: " + combinations);
-            System.out.println("Number of combinations: " + combinations.size());
-            System.out.println();
+        // Teste 3
+        System.out.println("\nTeste 3: k=4, n=1");
+        List<List<Integer>> result3 = solution.combinationSum3(4, 1);
+        printResult(result3);
+
+        // Teste 4
+        System.out.println("\nTeste 4: k=3, n=15");
+        List<List<Integer>> result4 = solution.combinationSum3(3, 15);
+        printResult(result4);
+
+        // Teste 5
+        System.out.println("\nTeste 5: k=2, n=18");
+        List<List<Integer>> result5 = solution.combinationSum3(2, 18);
+        printResult(result5);
+    }
+
+    // Método auxiliar para imprimir resultados
+    private static void printResult(List<List<Integer>> result) {
+        if (result.isEmpty()) {
+            System.out.println("Nenhuma combinação encontrada");
+        } else {
+            for (int i = 0; i < result.size(); i++) {
+                System.out.println("Combinação " + (i + 1) + ": " + result.get(i));
+            }
         }
-
-        // Exemplo detalhado
-        System.out.println("=== Exemplo Detalhado ===");
-        String example = "23";
-        List<String> result = solution.letterCombinations(example);
-        System.out.println("Dígitos: " + example);
-        System.out.println("Combinações: " + result);
-        System.out.println("Explicação:");
-        System.out.println("  2 -> abc, 3 -> def");
-        System.out.println("  Combinações: a+d, a+e, a+f, b+d, b+e, b+f, c+d, c+e, c+f");
     }
 }
