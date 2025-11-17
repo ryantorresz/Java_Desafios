@@ -1,94 +1,96 @@
 import java.util.Arrays;
 
 class Solution {
+    public int minEatingSpeed(int[] piles, int h) {
+        long low = 1;
 
-    public int[] successfulPairs(int[] spells, int[] potions, long success) {
-        int n = spells.length;
-        int m = potions.length;
-
-        // 1. Ordena o array de poções para permitir a Busca Binária.
-        Arrays.sort(potions);
-
-        int[] result = new int[n];
-
-        // 2. Itera sobre cada feitiço e aplica a Busca Binária.
-        for (int i = 0; i < n; i++) {
-            long spellStrength = spells[i];
-
-            // Calcula a força mínima da poção necessária (minPotionNeeded).
-            // Usa (success + spellStrength - 1) / spellStrength para calcular o teto (ceil) de forma segura.
-            long minPotionNeeded = (success + spellStrength - 1) / spellStrength;
-
-            // Encontra o primeiro índice (firstSuccessfulIndex) tal que potions[j] >= minPotionNeeded.
-            int firstSuccessfulIndex = binarySearchForMinIndex(potions, minPotionNeeded);
-
-            // O número de pares bem-sucedidos é o número de poções restantes a partir desse índice.
-            // Se o índice for 'm', significa que não há poções suficientes.
-            if (firstSuccessfulIndex == m) {
-                result[i] = 0;
-            } else {
-                result[i] = m - firstSuccessfulIndex;
-            }
+        long high = 0;
+        for (int pile : piles) {
+            high = Math.max(high, pile);
         }
 
-        return result;
-    }
-
-    /**
-     * Busca Binária customizada (Lower Bound) para encontrar o primeiro índice >= target.
-     */
-    private int binarySearchForMinIndex(int[] arr, long target) {
-        int low = 0;
-        int high = arr.length - 1;
-        int ans = arr.length; // Padrão se não encontrar nada (todos os elementos são menores)
+        long minSpeed = high;
 
         while (low <= high) {
-            int mid = low + (high - low) / 2;
+            long mid = low + (high - low) / 2;
 
-            if (arr[mid] >= target) {
-                // Este é um resultado possível, guarda e tenta buscar algo menor à esquerda.
-                ans = mid;
+            if (canFinish(piles, h, mid)) {
+                minSpeed = mid;
                 high = mid - 1;
             } else {
-                // Muito pequeno, move o limite inferior.
                 low = mid + 1;
             }
         }
-        return ans;
+
+        return (int) minSpeed;
     }
-}
 
-// 3. Classe Principal para Execução e Teste
-public class Main {
+    private boolean canFinish(int[] piles, int h, long k) {
+        long hoursNeeded = 0;
+
+        for (int pile : piles) {
+            hoursNeeded += ((long)pile + k - 1) / k;
+
+            if (hoursNeeded > h) {
+                return false;
+            }
+        }
+
+        return hoursNeeded <= h;
+    }
+
     public static void main(String[] args) {
-        Solution solver = new Solution();
+        Solution solution = new Solution();
 
-        // --- Exemplo 1 (do LeetCode) ---
-        int[] spells1 = {5, 1, 3};
-        int[] potions1 = {1, 2, 3, 4, 5};
-        long success1 = 7;
+        // Casos de teste
+        int[][] testPiles = {
+                {3, 6, 7, 11},     // Caso 1
+                {30, 11, 23, 4, 20}, // Caso 2
+                {30, 11, 23, 4, 20}, // Caso 3
+                {1, 1, 1, 1},       // Caso 4
+                {1000000000},       // Caso 5 - pile grande
+                {2, 2}              // Caso 6
+        };
 
-        int[] result1 = solver.successfulPairs(spells1, potions1, success1);
+        int[] testHours = {
+                8,   // Caso 1
+                5,   // Caso 2
+                6,   // Caso 3
+                4,   // Caso 4
+                2,   // Caso 5
+                2    // Caso 6
+        };
 
-        System.out.println("--- Teste 1 ---");
-        System.out.println("Feitiços: " + Arrays.toString(spells1));
-        System.out.println("Poções: " + Arrays.toString(potions1));
-        System.out.println("Successo: " + success1);
-        System.out.println("Pares Bem-Sucedidos: " + Arrays.toString(result1)); // Esperado: [4, 0, 3]
-        System.out.println("---------------------------------------\n");
+        int[] expectedResults = {
+                4,  // Caso 1: k=4
+                30, // Caso 2: k=30
+                23, // Caso 3: k=23
+                1,  // Caso 4: k=1
+                500000000, // Caso 5: k=500000000
+                2
+        };
 
-        // --- Exemplo 2 ---
-        int[] spells2 = {3, 1, 2};
-        int[] potions2 = {8, 5, 8};
-        long success2 = 16;
+        System.out.println("=== Testando Koko Eating Bananas ===\n");
 
-        int[] result2 = solver.successfulPairs(spells2, potions2, success2);
+        for (int i = 0; i < testPiles.length; i++) {
+            int result = solution.minEatingSpeed(testPiles[i], testHours[i]);
+            boolean passed = (result == expectedResults[i]);
 
-        System.out.println("--- Teste 2 ---");
-        System.out.println("Feitiços: " + Arrays.toString(spells2));
-        System.out.println("Poções (Antes de ordenar): " + Arrays.toString(new int[]{8, 5, 8}));
-        System.out.println("Successo: " + success2);
-        System.out.println("Pares Bem-Sucedidos: " + Arrays.toString(result2)); // Esperado: [2, 0, 2]
-        System.out.println("---------------------------------------");
+            System.out.println("Caso " + (i + 1) + ":");
+            System.out.println("  Pilhas: " + Arrays.toString(testPiles[i]));
+            System.out.println("  Horas (h): " + testHours[i]);
+            System.out.println("  Velocidade esperada: " + expectedResults[i]);
+            System.out.println("  Velocidade calculada: " + result);
+            System.out.println("  Status: " + (passed ? "✓ PASSOU" : "✗ FALHOU"));
+            System.out.println();
+        }
+
+        System.out.println("=== Teste Interativo ===");
+        int[] customPiles = {3, 6, 7, 11};
+        int customHours = 8;
+        int customResult = solution.minEatingSpeed(customPiles, customHours);
+        System.out.println("Pilhas: " + Arrays.toString(customPiles));
+        System.out.println("Horas disponíveis: " + customHours);
+        System.out.println("Velocidade mínima necessária: " + customResult);
     }
 }
