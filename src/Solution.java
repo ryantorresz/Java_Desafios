@@ -1,55 +1,28 @@
-import java.io.*;
-import java.util.*;
-import java.text.*;
-import java.math.*;
-import java.util.regex.*;
+import java.util.Arrays;
+
+class Arithmetic {
+    public int add(int... numbers) {
+        return Arrays.stream(numbers).sum();
+    }
+}
+
+class Adder extends Arithmetic {
+}
 
 public class Solution {
-
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Adder a = new Adder();
 
-        int N = scanner.nextInt();
-        int M = scanner.nextInt();
+        int n1 = 42;
+        int n2 = 13;
+        int n3 = 20;
 
-        BitSet B1 = new BitSet(N);
-        BitSet B2 = new BitSet(N);
+        String superclassName = a.getClass().getSuperclass().getSimpleName();
+        System.out.println("My superclass is: " + superclassName);
 
-        BitSet[] B = new BitSet[3];
-        B[1] = B1;
-        B[2] = B2;
+        int sumResult = a.add(n1, n2, n3);
 
-        for (int i = 0; i < M; i++) {
-            String operation = scanner.next();
-            int arg1 = scanner.nextInt();
+        System.out.println(n1 + " " + n2 + " " + n3);
 
-            int arg2 = scanner.nextInt();
-
-            switch (operation) {
-                case "AND":
-                    B[arg1].and(B[arg2]);
-                    break;
-
-                case "OR":
-                    B[arg1].or(B[arg2]);
-                    break;
-
-                case "XOR":
-                    B[arg1].xor(B[arg2]);
-                    break;
-
-                case "FLIP":
-                    B[arg1].flip(arg2);
-                    break;
-
-                case "SET":
-                    B[arg1].set(arg2);
-                    break;
-            }
-
-            System.out.println(B1.cardinality() + " " + B2.cardinality());
-        }
-
-        scanner.close();
     }
 }
