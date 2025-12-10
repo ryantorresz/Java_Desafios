@@ -4,53 +4,65 @@ import java.security.*;
 import java.text.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.*;
 import java.util.regex.*;
+import java.util.stream.*;
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Collectors.toList;
 
-public class Solution {
+class Result {
 
-    // Complete the minimumSwaps function below.
-    static int minimumSwaps(int[] arr) {
+    /*
+     * Complete the 'minimumBribes' function below.
+     *
+     * The function accepts INTEGER_ARRAY q as parameter.
+     */
 
-        int passos = 0;
-        int numeros = arr.length;
+    public static void minimumBribes(List<Integer> q) {
 
-        for (int i = 0; i < numeros; i++){
 
-            while(arr[i] != i + 1){
-                int tempo = arr[i];
-                arr[i] = arr[tempo - 1];
-                arr[tempo - 1] = tempo;
-                passos++;
+        int totalSuborno = 0;
+
+        for (int i = 0; i < q.size(); i++){
+
+            if (q.get(i) - (i + 1) > 2) {
+                System.out.println("Too chaotic");
+                return;
+            }
+
+            int comeco = Math.max(0, q.get(i) - 2);
+            for (int j = comeco; j < i; j++){
+                if (q.get(j) > q.get(i)){
+                    totalSuborno++;
+                }
             }
         }
-        return passos;
+
+        System.out.println(totalSuborno);
     }
 
-    private static final Scanner scanner = new Scanner(System.in);
+}
 
+public class Solution {
     public static void main(String[] args) throws IOException {
-        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(System.getenv("OUTPUT_PATH")));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 
-        int n = scanner.nextInt();
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+        int t = Integer.parseInt(bufferedReader.readLine().trim());
 
-        int[] arr = new int[n];
+        IntStream.range(0, t).forEach(tItr -> {
+            try {
+                int n = Integer.parseInt(bufferedReader.readLine().trim());
 
-        String[] arrItems = scanner.nextLine().split(" ");
-        scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
+                List<Integer> q = Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
+                        .map(Integer::parseInt)
+                        .collect(toList());
 
-        for (int i = 0; i < n; i++) {
-            int arrItem = Integer.parseInt(arrItems[i]);
-            arr[i] = arrItem;
-        }
+                Result.minimumBribes(q);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
-        int res = minimumSwaps(arr);
-
-        bufferedWriter.write(String.valueOf(res));
-        bufferedWriter.newLine();
-
-        bufferedWriter.close();
-
-        scanner.close();
+        bufferedReader.close();
     }
 }
