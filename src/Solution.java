@@ -1,57 +1,50 @@
-import java.io.*;
-import java.math.*;
-import java.security.*;
-import java.text.*;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
-import java.util.regex.*;
-import java.util.stream.*;
-import static java.util.stream.Collectors.toList;
-
-class Result {
-
-    public static void countSwaps(List<Integer> a) {
 
 
-        int n = a.size();
-        int passos = 0;
+class Player {
+    String nome;
+    int score;
 
-        for (int i = 0; i < n; i++){
+    Player (String nome, int score){
+        this.nome = nome;
+        this.score = score;
+    }
+}
 
-            int passosPassados = 0;
+class Checar implements Comparator<Player> {
+    @Override
+    public int compare(Player a, Player b){
 
-            for (int j = 0; j < n - 1; j++){
-                if (a.get(j) > a.get(j + 1)){
-                    int temporario = a.get(j);
-                    a.set(j, a.get(j + 1));
-                    a.set(j + 1, temporario);
-                    passosPassados++;
-                    passos++;
-                }
-            }
+        if(a.score != b.score){
+            return b.score - a.score;
         }
 
-        System.out.println("Array is sorted in " + passos + " swaps.");
-        System.out.println("First Element: " + a.get(0));
-        System.out.println("Last Element: " + a.get(n - 1));
-
+        return a.nome.compareTo(b.nome);
     }
-
 }
 
 public class Solution {
-    public static void main(String[] args) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+    public static void main(String[] args){
 
-        int n = Integer.parseInt(bufferedReader.readLine().trim());
+        Scanner scan = new Scanner(System.in);
 
-        List<Integer> a = Stream.of(bufferedReader.readLine().replaceAll("\\s+$", "").split(" "))
-                .map(Integer::parseInt)
-                .collect(toList());
+        int n = scan.nextInt();
 
-        Result.countSwaps(a);
+        Player[] players = new Player[n];
+        Checar checar = new Checar();
 
-        bufferedReader.close();
+        for (int i = 0; i < n; i++){
+            String nome = scan.next();
+            int score = scan.nextInt();
+            players[i] = new Player(nome, score);
+        }
+        scan.close();
+
+        Arrays.sort(players, checar);
+
+        for (Player p : players){
+            System.out.println(p.nome + " " + p.score);
+        }
     }
 }
+
